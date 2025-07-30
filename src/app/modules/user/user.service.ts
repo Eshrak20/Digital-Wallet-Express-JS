@@ -1,10 +1,11 @@
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import httpStatus from "http-status-codes";
-import { IAuthProvider, IUser } from "./user.interface";
+import { IAuthProvider, IUser, Role } from "./user.interface";
 import AppError from "../../errorHelpers/AppError";
 import { UserModel } from "./user.model";
 import { WalletModel } from "../wallet/wallet.model";
 import { envVars } from "../../config/env";
+import { JwtPayload } from "jsonwebtoken";
 
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, role = "USER", ...rest } = payload;
@@ -21,7 +22,7 @@ const createUser = async (payload: Partial<IUser>) => {
     throw new AppError(httpStatus.BAD_REQUEST, "User already exists.");
   }
 
-  const hashedPassword = await bcrypt.hash(
+  const hashedPassword = await bcryptjs.hash(
     password,
     Number(envVars.BCRYPT_SALT_ROUND) || 10
   );
@@ -50,6 +51,49 @@ const createUser = async (payload: Partial<IUser>) => {
 
   return user;
 };
+
+const updateUser = async (
+  userId: string,
+  payload: Partial<IUser>,
+  decodedToken: JwtPayload
+) => {
+  const ifUserExist = await UserModel.findById(userId);
+
+  if (!ifUserExist) {
+    throw new AppError(httpStatus.NOT_FOUND, "User Not Found");
+  }
+
+  if (payload.role) {
+    if (decodedToken.role === Role.USER || decodedToken.role === Role.AGENT) {
+      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+    }
+
+    if (payload.role === Role.ADMIN && decodedToken.role === Role.ADMIN) {
+      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+    }
+  }
+
+  if (payload.is_active || payload.is_verified) {
+    if (decodedToken.role === Role.USER || decodedToken.role === Role.AGENT) {
+      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+    }
+  }
+
+  if (payload.password) {
+    payload.password = await bcryptjs.hash(
+      payload.password,
+      envVars.BCRYPT_SALT_ROUND
+    );
+  }
+
+  const newUpdatedUser = await UserModel.findByIdAndUpdate(userId, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  return newUpdatedUser;
+};
+
 const getAllUsers = async () => {
   const users = await UserModel.find({});
   const totalUsers = await UserModel.countDocuments();
@@ -63,5 +107,6 @@ const getAllUsers = async () => {
 
 export const UserServices = {
   createUser,
-  getAllUsers
+  updateUser,
+  getAllUsers,
 };
