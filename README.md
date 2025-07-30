@@ -18,13 +18,10 @@ https://gitmind.com/app/docs/mzkbj5o2
 
 # Tour-Management-backend
 
-https://github.com/Apollo-Level2-Web-Dev/ph-tour-management-system-backend/tree/part-2 ✅
-https://github.com/Apollo-Level2-Web-Dev/ph-tour-management-system-backend/tree/part-3 ✅
-https://github.com/Apollo-Level2-Web-Dev/ph-tour-management-system-backend/tree/part-4 ✅
-https://github.com/Apollo-Level2-Web-Dev/ph-tour-management-system-backend/tree/part-5
+https://github.com/Apollo-Level2-Web-Dev/B5A5
+https://github.com/Apollo-Level2-Web-Dev/B5A5/blob/main/1.%20Digital%20Wallet%20System.md
 
 
-https://docs.google.com/document/d/13DI_gV9b9xz1-EM_Lh6lWkAq1jXBUpGimGIxya6HqJY/edit?tab=t.bf9fqduguthr#heading=h.x2bn6zx08gyp
 
 # Support Session Questions
 
@@ -35,3 +32,5 @@ https://docs.google.com/document/d/13DI_gV9b9xz1-EM_Lh6lWkAq1jXBUpGimGIxya6HqJY/
 
 5. Have to understand Global Error Handler , Like how to catch error , and how to send the response
 # Digital-Wallet-Express-JS
+
+
