@@ -21,6 +21,8 @@ https://gitmind.com/app/docs/mzkbj5o2
 https://github.com/Apollo-Level2-Web-Dev/B5A5
 https://github.com/Apollo-Level2-Web-Dev/B5A5/blob/main/1.%20Digital%20Wallet%20System.md
 
+# ERD 
+https://app.diagrams.net/?splash=0#G1QCTlaziJvm-ju8ES27C4qvEUh6Xemuyz
 
 
 # Support Session Questions
@@ -32,5 +34,16 @@ https://github.com/Apollo-Level2-Web-Dev/B5A5/blob/main/1.%20Digital%20Wallet%20
 
 5. Have to understand Global Error Handler , Like how to catch error , and how to send the response
 # Digital-Wallet-Express-JS
+
+# ✅ TypeScript + Mongoose Interface Naming Conventions
+
+| Name                    | Purpose                                                             |
+| ----------------------- | ------------------------------------------------------------------- |
+| `IModelName`            | Represents the **Mongoose document** (what you get from `.find()`)  |
+| `IModelNameCreateInput` | Represents the **input DTO** when creating a document (`.create()`) |
+| `IModelNameUpdateInput` | Represents the **fields allowed to update** (`.updateOne()`, PATCH) |
+| `ModelNameSchema`       | The **Mongoose Schema** definition                                  |
+| `ModelNameModel`        | The **Mongoose Model** (used to query the DB)                       |
+
 
 
