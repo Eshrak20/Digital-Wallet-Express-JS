@@ -11,7 +11,7 @@ const getAllTransaction = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "Transaction created successfully",
+    message: "All Transaction Retrieved Successfully",
     data: result,
   });
 });

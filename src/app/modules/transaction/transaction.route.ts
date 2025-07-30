@@ -10,4 +10,4 @@ router.get(
   transactionControllers.getAllTransaction
 );
 
-export const WalletRoutes = router;
+export const TransRoutes = router;

@@ -5,11 +5,12 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { WalletService } from "./wallet.service";
 
-const addMoney = catchAsync(async (req: Request, res: Response) => {
-  
-  const { user_id, amount } = req.body;
-  console.log("This taja",amount , user_id);
+import { Types } from "mongoose";
+import { JwtUserPayload } from "../../interfaces/JwtUserPayload.types";
 
+const addMoney = catchAsync(async (req: Request, res: Response) => {
+  const { userId: user_id } = req.user as JwtUserPayload;
+  const { amount } = req.body;
   const result = await WalletService.addMoney(user_id, amount);
 
   sendResponse(res, {

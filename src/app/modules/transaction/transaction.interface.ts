@@ -8,7 +8,7 @@ export interface ITransaction {
 }
 
 export interface ITransactionCreateInput {
-  user_id: Types.ObjectId;
+  user_id: string;
   type: "add" | "withdraw" | "transfer";
   amount: number;
   status: "pending" | "completed" | "failed";
