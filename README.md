@@ -32,8 +32,8 @@ npm install
 ## Run in development
 npm run dev
 
-## Build for production
-npm run build
+
+
 
 
 ## 🔀 API Endpoints
