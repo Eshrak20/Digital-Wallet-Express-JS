@@ -1,4 +1,3 @@
-<!-- public/welcome.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -45,6 +44,16 @@
         filter: blur(80px);
         opacity: 0.6;
       }
+
+      .endpoint-method {
+        font-family: monospace;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+      .post { background-color: #10b981; }
+      .get { background-color: #3b82f6; }
+      .patch { background-color: #f59e0b; }
     </style>
   </head>
   <body class="min-h-screen text-white p-6 font-sans bg-black overflow-x-hidden">
@@ -54,90 +63,185 @@
           💳 Digital Wallet Management System
         </h1>
         <p class="text-lg text-gray-200 font-light">
-          A RESTful API for managing wallet operations using
-          <span class="font-semibold text-white">Express</span>,
-          <span class="font-semibold text-white">TypeScript</span>, and
-          <span class="font-semibold text-white">MongoDB</span>.
+          A secure RESTful API for wallet operations with role-based access control
         </p>
-        <a
-          href="https://youtu.be/your-video-link"
-          target="_blank"
-          class="inline-block mt-6 px-6 py-2 bg-white text-purple-700 rounded-full font-semibold shadow hover:bg-gray-100 transition duration-300"
-        >
-          ▶️ Visit Project Overview
-        </a>
+        <div class="flex justify-center gap-4 mt-6">
+          <a
+            href="https://youtu.be/your-video-link"
+            target="_blank"
+            class="inline-block px-6 py-2 bg-white text-purple-700 rounded-full font-semibold shadow hover:bg-gray-100 transition duration-300"
+          >
+            ▶️ Overview Video
+          </a>
+          <a
+            href="https://wallet-management.vercel.app"
+            target="_blank"
+            class="inline-block px-6 py-2 bg-purple-600 text-white rounded-full font-semibold shadow hover:bg-purple-700 transition duration-300"
+          >
+            🌐 Live Demo
+          </a>
+        </div>
       </header>
 
       <section class="glass p-6 rounded-2xl shadow-lg">
-        <h2 class="text-2xl font-semibold mb-4">🚀 Features</h2>
-        <ul class="list-disc list-inside text-gray-200 space-y-1">
-          <li>Wallet creation and balance tracking</li>
-          <li>Secure money transfer between users</li>
-          <li>Agent cash-in and cash-out system</li>
-          <li>Commission system for agents and owner</li>
-          <li>User authentication with session and JWT</li>
-          <li>Role-based access control (Admin, User, Agent)</li>
-          <li>Real-time wallet updates with status check</li>
-          <li>DTO validation using Zod</li>
-        </ul>
-      </section>
-
-      <section class="glass p-6 rounded-2xl shadow-lg">
-        <h2 class="text-2xl font-semibold mb-4">🧰 Tech Stack</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center text-gray-100">
-          <span class="bg-purple-800 py-2 rounded">Node.js</span>
-          <span class="bg-purple-800 py-2 rounded">Express</span>
-          <span class="bg-purple-800 py-2 rounded">TypeScript</span>
-          <span class="bg-purple-800 py-2 rounded">MongoDB</span>
-          <span class="bg-purple-800 py-2 rounded">Mongoose</span>
-          <span class="bg-purple-800 py-2 rounded">Zod</span>
+        <h2 class="text-2xl font-semibold mb-4">🚀 Core Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h3 class="text-xl font-medium mb-2 text-purple-300">Authentication</h3>
+            <ul class="list-disc list-inside text-gray-200 space-y-1">
+              <li>JWT + Session based auth</li>
+              <li>Passport.js integration</li>
+              <li>Role-based access control</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xl font-medium mb-2 text-purple-300">Wallet Operations</h3>
+            <ul class="list-disc list-inside text-gray-200 space-y-1">
+              <li>Add money (Agent only)</li>
+              <li>Withdraw money (User only)</li>
+              <li>Transfer between users</li>
+              <li>Real-time status updates</li>
+            </ul>
+          </div>
         </div>
       </section>
 
       <section class="glass p-6 rounded-2xl shadow-lg">
-        <h2 class="text-2xl font-semibold mb-2">
-          🛠️ Setup Instructions
-          <span id="blurDaysText" class="text-sm text-gray-300 font-light"
-            >(Blurred until August 05, 2025)</span
-          >
-        </h2>
-        <pre
-          id="setupInstructions"
-          title="This content is locked until August 05, 2025"
-          class="bg-black/40 p-4 rounded overflow-x-auto text-sm leading-relaxed text-gray-200 blur-sm select-none transition-all duration-700"
-        >
-git clone xyz://hidden-path/wallet-system
-cd wallet-system
-npm install
+        <h2 class="text-2xl font-semibold mb-4">🔌 API Endpoints</h2>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-medium mb-2 text-purple-300">User Routes</h3>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method post">POST</span>
+              <code>/user/register</code>
+              <span class="text-gray-400">Register new user</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method patch">PATCH</span>
+              <code>/user/update</code>
+              <span class="text-gray-400">Update user (Admin)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method get">GET</span>
+              <code>/user/all-users</code>
+              <span class="text-gray-400">List all users (Admin)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method get">GET</span>
+              <code>/user/all-agents</code>
+              <span class="text-gray-400">List all agents (Admin)</span>
+            </div>
+          </div>
+        </div>
 
-PORT=XXXX
-DATABASE_URL=mongodb://xxx.xxx.xxx.xxx:xxxx/fake_db
+        <div class="mb-6">
+          <h3 class="text-xl font-medium mb-2 text-purple-300">Wallet Routes</h3>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method post">POST</span>
+              <code>/wallet/add</code>
+              <span class="text-gray-400">Add money (Agent)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method post">POST</span>
+              <code>/wallet/withdraw</code>
+              <span class="text-gray-400">Withdraw money (User)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method post">POST</span>
+              <code>/wallet/transfer-money</code>
+              <span class="text-gray-400">Transfer money (User)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method get">GET</span>
+              <code>/wallet/all-wallet</code>
+              <span class="text-gray-400">All wallets (Admin)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method get">GET</span>
+              <code>/wallet/my-wallet</code>
+              <span class="text-gray-400">My wallet (User/Agent)</span>
+            </div>
+          </div>
+        </div>
 
-# Development
-npm run dev
-
-# Production
-npm run build
-npm start
-        </pre>
+        <div>
+          <h3 class="text-xl font-medium mb-2 text-purple-300">Other Routes</h3>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method get">GET</span>
+              <code>/trans/all-transactions</code>
+              <span class="text-gray-400">All transactions (Admin)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method get">GET</span>
+              <code>/trans/your-transactions</code>
+              <span class="text-gray-400">My transactions (User/Agent)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method get">GET</span>
+              <code>/com/all-agent-com</code>
+              <span class="text-gray-400">All commissions (Admin)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="endpoint-method get">GET</span>
+              <code>/com/agent-com</code>
+              <span class="text-gray-400">My commissions (Agent)</span>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="glass p-6 rounded-2xl shadow-lg">
-        <h2 class="text-2xl font-semibold mb-2">✨ Optional but Helpful</h2>
+        <h2 class="text-2xl font-semibold mb-4">📂 Project Structure</h2>
+        <div class="bg-black/40 p-4 rounded-lg font-mono text-sm">
+          <div class="text-purple-300">src/</div>
+          <div class="ml-4">
+            <div class="text-purple-300">app/</div>
+            <div class="ml-6">
+              <div class="text-purple-300">modules/</div>
+              <div class="ml-6">
+                <div>├── user/ <span class="text-gray-400"># User controllers, services</span></div>
+                <div>├── auth/ <span class="text-gray-400"># Authentication logic</span></div>
+                <div>├── wallet/ <span class="text-gray-400"># Wallet operations</span></div>
+                <div>├── transaction/ <span class="text-gray-400"># Transaction handling</span></div>
+                <div>└── commission/ <span class="text-gray-400"># Commission system</span></div>
+              </div>
+              <div>└── middlewares/ <span class="text-gray-400"># Custom middleware</span></div>
+            </div>
+            <div class="text-purple-300">config/ <span class="text-gray-400"># Configuration files</span></div>
+            <div class="text-purple-300">utils/ <span class="text-gray-400"># Utility functions</span></div>
+            <div>server.ts <span class="text-gray-400"># Server entry point</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="glass p-6 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-semibold mb-4">⚙️ Environment Configuration</h2>
         <pre class="bg-black/40 p-4 rounded overflow-x-auto text-sm leading-relaxed text-gray-200">
-# Clear cache and run ESLint
-npx eslint ./src --ext .ts --no-cache
-        </pre>
+PORT=5000
+DB_URL=mongodb+srv://&lt;user&gt;:&lt;password&gt;@cluster0.mongodb.net/&lt;dbname&gt;
+NODE_ENV=development
+
+# JWT Configuration
+JWT_ACCESS_SECRET=digital_wallet
+JWT_ACCESS_EXPIRES=1d
+JWT_REFRESH_SECRET=your_refresh_secret
+JWT_REFRESH_EXPIRES=7d
+
+# Session
+EXPRESS_SESSION_SECRET=express-session</pre>
       </section>
 
       <section class="glass p-6 rounded-2xl shadow-lg">
-        <h2 class="text-2xl font-semibold mb-2">🧠 Naming Conventions</h2>
-        <ul class="list-disc list-inside text-gray-200 space-y-1">
-          <li><code>IModelName</code> → Mongoose document (e.g., .find())</li>
-          <li><code>IModelNameCreateInput</code> → DTO for .create()</li>
-          <li><code>IModelNameUpdateInput</code> → DTO for .updateOne()</li>
-          <li><code>ModelNameSchema</code> → Schema definition</li>
-          <li><code>ModelNameModel</code> → Mongoose Model</li>
+        <h2 class="text-2xl font-semibold mb-4">💡 Key Notes</h2>
+        <ul class="list-disc list-inside text-gray-200 space-y-2">
+          <li><span class="font-semibold">Add money</span> operation goes to Agent</li>
+          <li><span class="font-semibold">Withdraw money</span> operation goes to User</li>
+          <li>Admin has full system access</li>
+          <li>Agents can add money to user wallets</li>
+          <li>Users can withdraw/transfer their money</li>
         </ul>
       </section>
 
@@ -148,28 +252,5 @@ npx eslint ./src --ext .ts --no-cache
         >
       </footer>
     </div>
-
-    <script>
-      const targetDate = new Date("2025-08-05T00:00:00Z");
-      const now = new Date();
-      const el = document.getElementById("setupInstructions");
-
-      if (now >= targetDate && el) {
-        el.classList.remove("blur-sm", "select-none");
-        el.textContent = `git clone https://github.com/Eshrak20/wallet-system
-cd wallet-system
-npm install
-
-PORT=5000
-DATABASE_URL=mongodb://127.0.0.1:27017/wallet_db
-
-# Development
-npm run dev
-
-# Production
-npm run build
-npm start`;
-      }
-    </script>
   </body>
 </html>
