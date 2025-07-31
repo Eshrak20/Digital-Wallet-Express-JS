@@ -1,9 +1,4 @@
 # 💳 Digital Wallet Management System - Backend
-
-![Node.js](https://img.shields.io/badge/Node.js-18.x-green)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
-![MongoDB](https://img.shields.io/badge/MongoDB-7.x-green)
-
 > A secure and scalable RESTful API for managing digital wallet operations with role-based access control.
 
 ---
@@ -19,41 +14,45 @@
 
 ## 🛠️ Tech Stack
 
-```bash
-Backend:    Node.js | Express | TypeScript
-Database:   MongoDB (Mongoose)
-Auth:       JWT + Session | Passport.js
-Validation: Zod
-Linting:    ESLint + Prettier
-```
-
-PORT=5000
-DB_URL=mongodb+srv://<user>:<password>@cluster0.mongodb.net/<dbname>
-NODE_ENV=development
-
-# JWT Configuration
-JWT_ACCESS_SECRET=digital_wallet
-JWT_ACCESS_EXPIRES=1d
-JWT_REFRESH_SECRET=your_refresh_secret
-JWT_REFRESH_EXPIRES=7d
-
-# Session Secret
-EXPRESS_SESSION_SECRET=express-session
+- **🧠 Backend:** **Node.js**, **Express**, **TypeScript**
+- **🗄️ Database:** **MongoDB** with **Mongoose**
+- **🔐 Authentication:** **JWT**, **Session**, **Passport.js**
+- **✅ Validation:** **Zod**
+- **🧹 Code Quality:** **ESLint**, **Prettier**
 
 
 
-# Clone the repository
+## Clone the repository
 git clone https://github.com/your-username/backend-digital-wallet.git
 cd backend-digital-wallet
 
-# Install dependencies
+## Install dependencies
 npm install
 
-# Run in development
+## Run in development
 npm run dev
 
-# Build for production
+## Build for production
 npm run build
+
+
+
+
+| Folder/File               | Path                           | Description                |
+| ------------------------- | ------------------------------ | -------------------------- |
+| `app/modules/user`        | `src/app/modules/user/`        | User controllers, services |
+| `app/modules/auth`        | `src/app/modules/auth/`        | Authentication logic       |
+| `app/modules/wallet`      | `src/app/modules/wallet/`      | Wallet operations          |
+| `app/modules/transaction` | `src/app/modules/transaction/` | Transaction handling       |
+| `app/modules/commission`  | `src/app/modules/commission/`  | Commission system          |
+| `app/middlewares`         | `src/app/middlewares/`         | Custom middleware          |
+| `config`                  | `src/config/`                  | Configuration files        |
+| `utils`                   | `src/utils/`                   | Utility functions          |
+| `server.ts`               | `src/server.ts`                | Server entry point         |
+
+
+
+
 
 
 | Method | Endpoint           | Access | Description         |
@@ -62,6 +61,9 @@ npm run build
 | PATCH  | `/user/update`     | Admin  | Update user details |
 | GET    | `/user/all-users`  | Admin  | Get all users       |
 | GET    | `/user/all-agents` | Admin  | Get all agents      |
+
+
+
 
 
 | Method | Endpoint                 | Access     | Description                |
@@ -74,10 +76,15 @@ npm run build
 | PATCH  | `/wallet/:id`            | Admin      | Update wallet info         |
 
 
+
+
+
 | Method | Endpoint                   | Access     | Description             |
 | ------ | -------------------------- | ---------- | ----------------------- |
 | GET    | `/trans/all-transactions`  | Admin      | All system transactions |
 | GET    | `/trans/your-transactions` | User/Agent | Your own transactions   |
+
+
 
 
 | Method | Endpoint             | Access | Description            |
@@ -86,7 +93,12 @@ npm run build
 | GET    | `/com/agent-com`     | Agent  | My commission earnings |
 
 
-src/
+
+
+
+
+
+<!-- src/
 ├── app/
 │   ├── modules/
 │   │   ├── user/          # User controllers, services
@@ -97,13 +109,6 @@ src/
 │   └── middlewares/       # Custom middleware
 ├── config/                # Configuration files
 ├── utils/                 # Utility functions
-└── server.ts              # Server entry point
+└── server.ts              # Server entry point -->
 
 
-"scripts": {
-  "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
-  "lint": "npx eslint ./src",
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "build": "tsc",
-  "vercel-build": "npm run build"
-}
