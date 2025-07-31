@@ -36,25 +36,12 @@ npm run dev
 npm run build
 
 
-
-
-| Folder/File               | Path                           | Description                |
-| ------------------------- | ------------------------------ | -------------------------- |
-| `app/modules/user`        | `src/app/modules/user/`        | User controllers, services |
-| `app/modules/auth`        | `src/app/modules/auth/`        | Authentication logic       |
-| `app/modules/wallet`      | `src/app/modules/wallet/`      | Wallet operations          |
-| `app/modules/transaction` | `src/app/modules/transaction/` | Transaction handling       |
-| `app/modules/commission`  | `src/app/modules/commission/`  | Commission system          |
-| `app/middlewares`         | `src/app/middlewares/`         | Custom middleware          |
-| `config`                  | `src/config/`                  | Configuration files        |
-| `utils`                   | `src/utils/`                   | Utility functions          |
-| `server.ts`               | `src/server.ts`                | Server entry point         |
+## 🔀 API Endpoints
 
 
 
 
-
-
+### 👤 User Routes
 | Method | Endpoint           | Access | Description         |
 | ------ | ------------------ | ------ | ------------------- |
 | POST   | `/user/register`   | Public | Register new user   |
@@ -64,8 +51,7 @@ npm run build
 
 
 
-
-
+### 💼 Wallet Routes
 | Method | Endpoint                 | Access     | Description                |
 | ------ | ------------------------ | ---------- | -------------------------- |
 | POST   | `/wallet/add`            | Agent      | Add money to user wallet   |
@@ -78,7 +64,7 @@ npm run build
 
 
 
-
+### 💳 Transaction Routes
 | Method | Endpoint                   | Access     | Description             |
 | ------ | -------------------------- | ---------- | ----------------------- |
 | GET    | `/trans/all-transactions`  | Admin      | All system transactions |
@@ -86,12 +72,33 @@ npm run build
 
 
 
-
+### 💰 Commission Routes
 | Method | Endpoint             | Access | Description            |
 | ------ | -------------------- | ------ | ---------------------- |
 | GET    | `/com/all-agent-com` | Admin  | All commissions data   |
 | GET    | `/com/agent-com`     | Agent  | My commission earnings |
 
+
+
+
+
+
+
+
+
+
+## 📁 Project Structure
+| Folder/File               | Path                           | Description                |
+| ------------------------- | ------------------------------ | -------------------------- |
+| `app/modules/user`        | `src/app/modules/user/`        | User controllers, services |
+| `app/modules/auth`        | `src/app/modules/auth/`        | Authentication logic       |
+| `app/modules/wallet`      | `src/app/modules/wallet/`      | Wallet operations          |
+| `app/modules/transaction` | `src/app/modules/transaction/` | Transaction handling       |
+| `app/modules/commission`  | `src/app/modules/commission/`  | Commission system          |
+| `app/middlewares`         | `src/app/middlewares/`         | Custom middleware          |
+| `config`                  | `src/config/`                  | Configuration files        |
+| `utils`                   | `src/utils/`                   | Utility functions          |
+| `server.ts`               | `src/server.ts`                | Server entry point         |
 
 
 
