@@ -1,6 +1,6 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import express, { Request, Response } from "express";
+import express from "express";
 import expressSession from "express-session";
 import passport from "passport";
 import { envVars } from "./app/config/env";
@@ -8,6 +8,7 @@ import "./app/config/passport";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import { router } from "./app/routes";
+import path from "path";
 
 const app = express()
 
@@ -25,11 +26,9 @@ app.use(cors())
 
 app.use("/api/w1", router)
 
-app.get("/", (req: Request, res: Response) => {
-    res.status(200).json({
-        message: "Welcome to Digital Wallet System Backend"
-    })
-})
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/welcome.html"));
+});
 
 
 app.use(globalErrorHandler)

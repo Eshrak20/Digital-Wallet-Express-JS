@@ -1,13 +1,25 @@
 import AppError from "../../errorHelpers/AppError";
-import { TransferFee, WithdrawCommission } from "../commission/commission.service";
+import {
+  TransferFee,
+  WithdrawCommission,
+} from "../commission/commission.service";
 import {
   TransactionStatus,
   TransactionType,
 } from "../transaction/transaction.interface";
 import { TransactionService } from "../transaction/transaction.service";
+import { UserModel } from "../user/user.model";
 import { WalletModel } from "../wallet/wallet.model";
 import { IWallet } from "./wallet.interface";
 
+const getMylWallet = async (user_id: string) => {
+  const wallet = await WalletModel.find({ user: user_id }).sort({
+    createdAt: -1,
+  });
+  return {
+    data: wallet,
+  };
+};
 const getAllWallet = async () => {
   const transactions = await WalletModel.find({});
   const totalTransaction = await WalletModel.countDocuments();
@@ -24,6 +36,11 @@ const addMoney = async (user_id: string, agent_id: string, amount: number) => {
 
   const userWallet = await WalletModel.findOne({ user: user_id });
   const agentWallet = await WalletModel.findOne({ user: agent_id });
+
+  const userModel = await UserModel.findById(agent_id);
+
+  if (!userModel || userModel.role !== "USER")
+    throw new AppError(404, "This account is not register as USER");
 
   if (!userWallet || !agentWallet) throw new AppError(404, "Wallet not found");
   if (userWallet.status === "BLOCKED" || agentWallet.status === "BLOCKED")
@@ -59,18 +76,25 @@ const withdrawMoney = async (
 
   const userWallet = await WalletModel.findOne({ user: user_id });
   const agentWallet = await WalletModel.findOne({ user: agent_id });
+  const agentModel = await UserModel.findById(agent_id);
+
+  if (!agentModel || agentModel.role !== "AGENT")
+    throw new AppError(404, "This account is not register as AGENT");
 
   if (!userWallet || !agentWallet) throw new AppError(404, "Wallet not found");
   if (userWallet.status === "BLOCKED" || agentWallet.status === "BLOCKED")
     throw new AppError(403, "Wallet is blocked");
 
-  const { transaction_fee } = await WithdrawCommission(
+  const { transaction_fee, agent_commission } = await WithdrawCommission(
     agent_id,
     amount
   );
 
-  const totalDeduction = amount + transaction_fee;
-  if (userWallet.balance < totalDeduction) {
+  const totalDeductionUser = amount + transaction_fee;
+  const totalDeductionAgent = amount + agent_commission;
+  console.log("agent_commission",agent_commission)
+  console.log("totalDeductionAgent",totalDeductionAgent)
+  if (userWallet.balance < totalDeductionUser) {
     throw new AppError(422, "Insufficient Balance including transaction fee");
   }
 
@@ -78,13 +102,13 @@ const withdrawMoney = async (
     user: user_id,
     agent: agent_id,
     amount,
-    transaction_fee: totalDeduction,
+    transaction_fee: transaction_fee,
     type: TransactionType.WITHDRAW,
     status: TransactionStatus.COMPLETED,
   });
 
-  agentWallet.balance += amount;
-  userWallet.balance -= totalDeduction;
+  agentWallet.balance += totalDeductionAgent;
+  userWallet.balance -= totalDeductionUser;
 
   await agentWallet.save();
   await userWallet.save();
@@ -92,7 +116,7 @@ const withdrawMoney = async (
   return {
     userWallet,
     agentWallet,
-    withdrawMoney: totalDeduction,
+    withdrawMoney: totalDeductionUser,
     transactionFee: transaction_fee,
   };
 };
@@ -107,13 +131,17 @@ const transferMoney = async (
   const senderWallet = await WalletModel.findOne({ user: sender_id });
   const receiverWallet = await WalletModel.findOne({ user: receiver_id });
 
-  if (!senderWallet || !receiverWallet) throw new AppError(404, "Wallet not found");
+  const userModel = await UserModel.findById(receiver_id);
+
+  if (!userModel || userModel.role !== "USER")
+    throw new AppError(404, "This account is not register as USER");
+
+  if (!senderWallet || !receiverWallet)
+    throw new AppError(404, "Wallet not found");
   if (senderWallet.status === "BLOCKED" || receiverWallet.status === "BLOCKED")
     throw new AppError(403, "Wallet is blocked");
 
-  const { transaction_fee } = await TransferFee(
-    amount
-  );
+  const { transaction_fee } = await TransferFee(amount);
 
   const totalDeduction = amount + transaction_fee;
   if (senderWallet.balance < totalDeduction) {
@@ -173,6 +201,7 @@ const updateWallet = async (userId: string, payload: Partial<IWallet>) => {
 
 export const WalletService = {
   addMoney,
+  getMylWallet,
   getAllWallet,
   withdrawMoney,
   transferMoney,

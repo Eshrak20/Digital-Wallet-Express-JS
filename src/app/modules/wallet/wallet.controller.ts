@@ -7,6 +7,17 @@ import { WalletService } from "./wallet.service";
 import { JwtUserPayload } from "../../interfaces/JwtUserPayload.types";
 import { JwtPayload } from "jsonwebtoken";
 
+const getMylWallet = catchAsync(async (req: Request, res: Response) => {
+  const { userId: user_id } = req.user as JwtUserPayload;
+  const result = await WalletService.getMylWallet(user_id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Your Wallet Retrieved Successfully",
+    data: result,
+  });
+});
 const getAllWallet = catchAsync(async (req: Request, res: Response) => {
   const result = await WalletService.getAllWallet();
 
@@ -32,13 +43,13 @@ const addMoney = catchAsync(async (req: Request, res: Response) => {
 });
 const withdrawMoney = catchAsync(async (req: Request, res: Response) => {
   const { userId: user_id } = req.user as JwtUserPayload;
-  const { agent_id,amount } = req.body;
-  const result = await WalletService.withdrawMoney(user_id, agent_id,amount);
+  const { agent_id, amount } = req.body;
+  const result = await WalletService.withdrawMoney(user_id, agent_id, amount);
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: "Money added successfully",
+    message: "Money withdraw successfully",
     data: result,
   });
 });
@@ -76,6 +87,7 @@ const updateWallet = catchAsync(async (req: Request, res: Response) => {
 export const WalletControllers = {
   addMoney,
   withdrawMoney,
+  getMylWallet,
   getAllWallet,
   transferMoney,
   updateWallet,

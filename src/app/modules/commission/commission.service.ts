@@ -1,8 +1,16 @@
 import { CapitalModel } from "../capital/capital.model";
 import { AgentCommissionHistoryModel } from "../commission/commission.model";
 export const WithdrawCommission = async (agentId: string, amount: number) => {
-  const feeUnit = Math.floor(amount / 1000);
-  const transactionFee = amount >= 1000 ? feeUnit * 20 : 10;
+  let feeUnit: number;
+  let transactionFee: number;
+
+  if (amount >= 1000) {
+    feeUnit = Math.floor(amount / 1000);
+    transactionFee = feeUnit * 20;
+  } else {
+    feeUnit = 0.5;
+    transactionFee = feeUnit * 20;
+  }
 
   const agentCommission = feeUnit * 10;
   const ownerCommission = transactionFee - agentCommission;
@@ -22,7 +30,7 @@ export const WithdrawCommission = async (agentId: string, amount: number) => {
     );
   }
 
-  return { transaction_fee: transactionFee };
+  return { transaction_fee: transactionFee, agent_commission: agentCommission };
 };
 export const TransferFee = async (amount: number) => {
   const transactionFee = amount <= 10000 ? 5 : 10;
@@ -38,20 +46,38 @@ export const TransferFee = async (amount: number) => {
   return { transaction_fee: transactionFee };
 };
 
+import mongoose from "mongoose";
+
 const getAllCommissionByUserID = async (user_id: string) => {
-  const transactions = await AgentCommissionHistoryModel.find({ agent_id: user_id }).sort({
-    createdAt: -1,
-  });
+  const agentObjectId = new mongoose.Types.ObjectId(user_id);
+
+  const transactions = await AgentCommissionHistoryModel.find({
+    agent_id: agentObjectId,
+  }).sort({ createdAt: -1 });
+
   const totalCommission = await AgentCommissionHistoryModel.countDocuments({
-    agent_id: user_id,
+    agent_id: agentObjectId,
   });
+
+  const totalAmount = await AgentCommissionHistoryModel.aggregate([
+    { $match: { agent_id: agentObjectId } },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: "$amount" },
+      },
+    },
+  ]);
+
   return {
     data: transactions,
     meta: {
       total: totalCommission,
+      totalCommissionAmount: totalAmount[0]?.total || 0,
     },
   };
 };
+
 const getAllCommission = async () => {
   const transactions = await AgentCommissionHistoryModel.find({}).sort({
     createdAt: -1,

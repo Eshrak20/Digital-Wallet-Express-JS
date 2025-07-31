@@ -1,0 +1,175 @@
+<!-- public/welcome.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Digital Wallet Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="icon"
+      href="https://img.icons8.com/external-flatart-icons-outline-flatarticons/64/external-wallet-user-interface-flatart-icons-outline-flatarticons.png"
+    />
+    <style>
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-fade-in-up {
+        animation: fadeInUp 1s ease-out both;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: radial-gradient(
+          circle at top left,
+          #b12fd5,
+          #6610f2,
+          #2d0b4e
+        );
+        filter: blur(80px);
+        opacity: 0.6;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-white p-6 font-sans bg-black overflow-x-hidden">
+    <div class="max-w-5xl mx-auto space-y-10 animate-fade-in-up">
+      <header class="text-center glass p-6 rounded-2xl shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">
+          💳 Digital Wallet Management System
+        </h1>
+        <p class="text-lg text-gray-200 font-light">
+          A RESTful API for managing wallet operations using
+          <span class="font-semibold text-white">Express</span>,
+          <span class="font-semibold text-white">TypeScript</span>, and
+          <span class="font-semibold text-white">MongoDB</span>.
+        </p>
+        <a
+          href="https://youtu.be/your-video-link"
+          target="_blank"
+          class="inline-block mt-6 px-6 py-2 bg-white text-purple-700 rounded-full font-semibold shadow hover:bg-gray-100 transition duration-300"
+        >
+          ▶️ Visit Project Overview
+        </a>
+      </header>
+
+      <section class="glass p-6 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-semibold mb-4">🚀 Features</h2>
+        <ul class="list-disc list-inside text-gray-200 space-y-1">
+          <li>Wallet creation and balance tracking</li>
+          <li>Secure money transfer between users</li>
+          <li>Agent cash-in and cash-out system</li>
+          <li>Commission system for agents and owner</li>
+          <li>User authentication with session and JWT</li>
+          <li>Role-based access control (Admin, User, Agent)</li>
+          <li>Real-time wallet updates with status check</li>
+          <li>DTO validation using Zod</li>
+        </ul>
+      </section>
+
+      <section class="glass p-6 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-semibold mb-4">🧰 Tech Stack</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center text-gray-100">
+          <span class="bg-purple-800 py-2 rounded">Node.js</span>
+          <span class="bg-purple-800 py-2 rounded">Express</span>
+          <span class="bg-purple-800 py-2 rounded">TypeScript</span>
+          <span class="bg-purple-800 py-2 rounded">MongoDB</span>
+          <span class="bg-purple-800 py-2 rounded">Mongoose</span>
+          <span class="bg-purple-800 py-2 rounded">Zod</span>
+        </div>
+      </section>
+
+      <section class="glass p-6 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-semibold mb-2">
+          🛠️ Setup Instructions
+          <span id="blurDaysText" class="text-sm text-gray-300 font-light"
+            >(Blurred until August 05, 2025)</span
+          >
+        </h2>
+        <pre
+          id="setupInstructions"
+          title="This content is locked until August 05, 2025"
+          class="bg-black/40 p-4 rounded overflow-x-auto text-sm leading-relaxed text-gray-200 blur-sm select-none transition-all duration-700"
+        >
+git clone xyz://hidden-path/wallet-system
+cd wallet-system
+npm install
+
+PORT=XXXX
+DATABASE_URL=mongodb://xxx.xxx.xxx.xxx:xxxx/fake_db
+
+# Development
+npm run dev
+
+# Production
+npm run build
+npm start
+        </pre>
+      </section>
+
+      <section class="glass p-6 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-semibold mb-2">✨ Optional but Helpful</h2>
+        <pre class="bg-black/40 p-4 rounded overflow-x-auto text-sm leading-relaxed text-gray-200">
+# Clear cache and run ESLint
+npx eslint ./src --ext .ts --no-cache
+        </pre>
+      </section>
+
+      <section class="glass p-6 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-semibold mb-2">🧠 Naming Conventions</h2>
+        <ul class="list-disc list-inside text-gray-200 space-y-1">
+          <li><code>IModelName</code> → Mongoose document (e.g., .find())</li>
+          <li><code>IModelNameCreateInput</code> → DTO for .create()</li>
+          <li><code>IModelNameUpdateInput</code> → DTO for .updateOne()</li>
+          <li><code>ModelNameSchema</code> → Schema definition</li>
+          <li><code>ModelNameModel</code> → Mongoose Model</li>
+        </ul>
+      </section>
+
+      <footer class="text-center text-sm text-gray-300 mt-10">
+        Made with ❤️ by
+        <a href="https://eshrakg.netlify.app" target="_blank" class="underline"
+          >Eshrak</a
+        >
+      </footer>
+    </div>
+
+    <script>
+      const targetDate = new Date("2025-08-05T00:00:00Z");
+      const now = new Date();
+      const el = document.getElementById("setupInstructions");
+
+      if (now >= targetDate && el) {
+        el.classList.remove("blur-sm", "select-none");
+        el.textContent = `git clone https://github.com/Eshrak20/wallet-system
+cd wallet-system
+npm install
+
+PORT=5000
+DATABASE_URL=mongodb://127.0.0.1:27017/wallet_db
+
+# Development
+npm run dev
+
+# Production
+npm run build
+npm start`;
+      }
+    </script>
+  </body>
+</html>

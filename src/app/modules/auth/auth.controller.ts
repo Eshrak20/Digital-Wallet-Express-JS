@@ -97,32 +97,12 @@ const resetPassword = catchAsync(async (req: Request, res: Response, next: NextF
         data: null,
     })
 })
-const googleCallbackController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-    let redirectTo = req.query.state ? req.query.state as string : ""
-
-    if (redirectTo.startsWith("/")) {
-        redirectTo = redirectTo.slice(1)
-    }
-
-    // /booking => booking , => "/" => ""
-    const user = req.user;
-
-    if (!user) {
-        throw new AppError(httpStatus.NOT_FOUND, "User Not Found")
-    }
-
-    const tokenInfo = createUserTokens(user)
-
-    setAuthCookie(res, tokenInfo)
-
-    res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
-})
 
 export const AuthControllers = {
     credentialsLogin,
     getNewAccessToken,
     logout,
     resetPassword,
-    googleCallbackController
+
 }

@@ -36,15 +36,15 @@ export const seedSuperAdmin = async () => {
       name: "Admin",
       role: Role.ADMIN,
       email: envVars.ADMIN_EMAIL,
-      phone: "01309176398",
-      address: "US",
+      phone: "01910203040",
+      address: "Dhaka",
       is_verified: true,
       is_active: IsActive.ACTIVE,
       password: hashedPassword,
       auths: [authProvider],
     };
     const admin = await UserModel.create(payload);
-    console.log("Admin Created Successfuly! \n");
+    console.log("Admin Created Successfully! \n");
     console.log(admin);
   } catch (error) {
     console.log(error);
