@@ -125,7 +125,7 @@ const transferMoney = async (
     agent: receiver_id,
     amount,
     transaction_fee: totalDeduction,
-    type: TransactionType.WITHDRAW,
+    type: TransactionType.TRANSFER,
     status: TransactionStatus.COMPLETED,
   });
 

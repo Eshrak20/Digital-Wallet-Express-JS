@@ -1,9 +1,6 @@
 import { CapitalModel } from "../capital/capital.model";
 import { AgentCommissionHistoryModel } from "../commission/commission.model";
-export const WithdrawCommission = async (
-  agentId: string,
-  amount: number
-) => {
+export const WithdrawCommission = async (agentId: string, amount: number) => {
   const feeUnit = Math.floor(amount / 1000);
   const transactionFee = amount >= 1000 ? feeUnit * 20 : 10;
 
@@ -42,21 +39,23 @@ export const TransferFee = async (amount: number) => {
 };
 
 const getAllCommissionByUserID = async (user_id: string) => {
-  const transactions = await AgentCommissionHistoryModel.find({
-    user: user_id,
-  }).sort({
+  const transactions = await AgentCommissionHistoryModel.find({ agent_id: user_id }).sort({
     createdAt: -1,
   });
-  const totalTransaction = await AgentCommissionHistoryModel.countDocuments();
+  const totalCommission = await AgentCommissionHistoryModel.countDocuments({
+    agent_id: user_id,
+  });
   return {
     data: transactions,
     meta: {
-      total: totalTransaction,
+      total: totalCommission,
     },
   };
 };
 const getAllCommission = async () => {
-  const transactions = await AgentCommissionHistoryModel.find({});
+  const transactions = await AgentCommissionHistoryModel.find({}).sort({
+    createdAt: -1,
+  });
   const totalTransaction = await AgentCommissionHistoryModel.countDocuments();
   return {
     data: transactions,

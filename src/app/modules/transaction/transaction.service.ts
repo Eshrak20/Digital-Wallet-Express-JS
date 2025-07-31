@@ -11,7 +11,7 @@ const getAllTransactionByUserID = async (user_id: string) => {
   const transactions = await TransactionModel.find({ user: user_id }).sort({
     createdAt: -1,
   });
-  const totalTransaction = await TransactionModel.countDocuments();
+  const totalTransaction = await TransactionModel.countDocuments({ user: user_id });
   return {
     data: transactions,
     meta: {
@@ -20,7 +20,9 @@ const getAllTransactionByUserID = async (user_id: string) => {
   };
 };
 const getAllTransaction = async () => {
-  const transactions = await TransactionModel.find({});
+  const transactions = await TransactionModel.find({}).sort({
+    createdAt: -1,
+  });
   const totalTransaction = await TransactionModel.countDocuments();
   return {
     data: transactions,
