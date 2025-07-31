@@ -5,9 +5,15 @@ import { Role } from "../user/user.interface";
 
 const router = Router();
 router.get(
-  "/all-transaction",
+  "/all-transactions",
   checkAuth(Role.ADMIN),
   transactionControllers.getAllTransaction
+);
+router.get(
+  "/your-transactions",
+  checkAuth(Role.USER || Role.AGENT),
+  transactionControllers.getAllTransactionByUserID,
+
 );
 
 export const TransRoutes = router;

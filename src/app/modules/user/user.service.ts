@@ -95,8 +95,18 @@ const updateUser = async (
 };
 
 const getAllUsers = async () => {
-  const users = await UserModel.find({});
-  const totalUsers = await UserModel.countDocuments();
+  const users = await UserModel.find({ role: "USER" });
+  const totalUsers = await UserModel.countDocuments({ role: "USER" });
+  return {
+    data: users,
+    meta: {
+      total: totalUsers,
+    },
+  };
+};
+const getAllAgents = async () => {
+  const users = await UserModel.find({ role: "AGENT" });
+  const totalUsers = await UserModel.countDocuments({ role: "AGENT" });
   return {
     data: users,
     meta: {
@@ -109,4 +119,5 @@ export const UserServices = {
   createUser,
   updateUser,
   getAllUsers,
+  getAllAgents,
 };

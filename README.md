@@ -47,3 +47,11 @@ https://app.diagrams.net/?splash=0#G1QCTlaziJvm-ju8ES27C4qvEUh6Xemuyz
 
 
 
+# Support Session Questions For Digital Wallet ! 
+
+1. Approve/suspend agents Goes to update any kind of user by Admin 
+2. Add money Goes to Agent
+3. Withdraw money Goes to User
+
+
+

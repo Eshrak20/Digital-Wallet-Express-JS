@@ -5,6 +5,7 @@ import {
 } from "../transaction/transaction.interface";
 import { TransactionService } from "../transaction/transaction.service";
 import { WalletModel } from "../wallet/wallet.model";
+import { IWallet } from "./wallet.interface";
 
 const getAllWallet = async () => {
   const transactions = await WalletModel.find({});
@@ -29,7 +30,7 @@ const addMoney = async (user_id: string, amount: number) => {
   await wallet.save();
 
   await TransactionService.createTransaction({
-    user_id: user_id,
+    user: user_id,
     amount,
     type: TransactionType.ADD,
     status: TransactionStatus.COMPLETED,
@@ -49,7 +50,7 @@ const withdrawMoney = async (user_id: string, amount: number) => {
   await wallet.save();
 
   await TransactionService.createTransaction({
-    user_id: user_id,
+    user: user_id,
     amount,
     type: TransactionType.WITHDRAW,
     status: TransactionStatus.COMPLETED,
@@ -74,7 +75,7 @@ const transferMoney = async (
     throw new AppError(403, "Wallet is blocked");
 
   if (senderWallet.balance < amount) {
-    throw new AppError(400, "Insufficient Balance amount");
+    throw new AppError(422, "Insufficient Balance");
   }
 
   senderWallet.balance -= amount;
@@ -83,9 +84,9 @@ const transferMoney = async (
   await receiverWallet.save();
 
   await TransactionService.createTransaction({
-    user_id: sender_id,
+    user: sender_id,
     amount,
-    type: TransactionType.WITHDRAW,
+    type: TransactionType.TRANSFER,
     status: TransactionStatus.COMPLETED,
   });
 
@@ -95,9 +96,28 @@ const transferMoney = async (
   };
 };
 
+const updateWallet = async (userId: string, payload: Partial<IWallet>) => {
+  const wallet = await WalletModel.findOne({ user: userId });
+
+  if (!wallet) throw new AppError(404, "Wallet not found");
+  if (wallet.status === "BLOCKED") throw new AppError(403, "Wallet is blocked");
+
+  const updatedWallet = await WalletModel.findOneAndUpdate(
+    { user: userId }, // filter
+    payload, // update
+    {
+      new: true, // return the updated document
+      runValidators: true,
+    }
+  );
+
+  return updatedWallet;
+};
+
 export const WalletService = {
   addMoney,
   getAllWallet,
   withdrawMoney,
   transferMoney,
+  updateWallet,
 };

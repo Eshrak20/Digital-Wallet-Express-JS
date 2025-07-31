@@ -11,14 +11,14 @@ export enum TransactionStatus {
 }
 
 export interface ITransaction {
-  user_id: Types.ObjectId;
+  user: Types.ObjectId;
   amount: number;
   type: TransactionType;
   status: TransactionStatus;
 }
 
 export interface ITransactionCreateInput {
-  user_id: string;
+  user: string;
   amount: number;
   type: TransactionType;
   status: TransactionStatus;

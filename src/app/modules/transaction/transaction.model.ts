@@ -3,7 +3,7 @@ import { ITransaction, TransactionStatus, TransactionType } from "./transaction.
 
 const transactionSchema = new Schema<ITransaction>(
   {
-    user_id: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,

@@ -50,9 +50,22 @@ const getAllUsers = catchAsync(
     });
   }
 );
+const getAllAgents = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await UserServices.getAllAgents();
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: "All Agents Retrieved Successfully",
+      data: result.data,
+      meta: result.meta,
+    });
+  }
+);
 
 export const UserControllers = {
   createUser,
   updateUser,
   getAllUsers,
+  getAllAgents,
 };

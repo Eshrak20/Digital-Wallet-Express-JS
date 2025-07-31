@@ -30,5 +30,6 @@ router.post(
   checkAuth(Role.USER),
   WalletControllers.transferMoney
 );
+router.patch("/:id", checkAuth(Role.ADMIN), WalletControllers.updateWallet)
 
 export const WalletRoutes = router;
