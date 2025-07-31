@@ -15,11 +15,14 @@ export interface ITransaction {
   amount: number;
   type: TransactionType;
   status: TransactionStatus;
+  transaction_fee?:number;
 }
 
 export interface ITransactionCreateInput {
   user: string;
+  agent: string;
   amount: number;
   type: TransactionType;
   status: TransactionStatus;
+  transaction_fee?:number;
 }

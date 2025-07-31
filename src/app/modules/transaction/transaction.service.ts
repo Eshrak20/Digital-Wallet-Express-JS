@@ -2,9 +2,11 @@ import { ITransactionCreateInput } from "./transaction.interface";
 import { TransactionModel } from "./transaction.model";
 
 const createTransaction = async (payload: ITransactionCreateInput) => {
-  const transaction = await TransactionModel.create(payload);
+  const transactionPayload = { ...payload };
+  const transaction = await TransactionModel.create(transactionPayload);
   return transaction;
 };
+
 const getAllTransactionByUserID = async (user_id: string) => {
   const transactions = await TransactionModel.find({ user: user_id }).sort({
     createdAt: -1,

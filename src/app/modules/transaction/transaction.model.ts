@@ -1,5 +1,9 @@
 import { Schema, model } from "mongoose";
-import { ITransaction, TransactionStatus, TransactionType } from "./transaction.interface";
+import {
+  ITransaction,
+  TransactionStatus,
+  TransactionType,
+} from "./transaction.interface";
 
 const transactionSchema = new Schema<ITransaction>(
   {
@@ -16,6 +20,11 @@ const transactionSchema = new Schema<ITransaction>(
     amount: {
       type: Number,
       required: true,
+    },
+    transaction_fee: {
+      type: Number,
+      required: true,
+      default: 0,
     },
     status: {
       type: String,

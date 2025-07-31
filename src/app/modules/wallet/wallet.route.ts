@@ -3,7 +3,7 @@ import { validateRequest } from "../../middlewares/validateRequest";
 import { WalletControllers } from "./wallet.controller";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
-import { WalletBalanceZodSchema, WalletTransferZodSchema } from "./wallet.validation";
+import { WalletBalanceAddZodSchema, WalletBalanceWithdrawZodSchema, WalletTransferZodSchema } from "./wallet.validation";
 
 const router = Router();
 
@@ -14,14 +14,14 @@ router.get(
 );
 router.post(
   "/add",
-  validateRequest(WalletBalanceZodSchema),
-  checkAuth(Role.AGENT, Role.USER),
+  validateRequest(WalletBalanceAddZodSchema),
+  checkAuth(Role.AGENT),
   WalletControllers.addMoney
 );
 router.post(
   "/withdraw",
-  validateRequest(WalletBalanceZodSchema),
-  checkAuth(Role.AGENT, Role.USER),
+  validateRequest(WalletBalanceWithdrawZodSchema),
+  checkAuth(Role.USER),
   WalletControllers.withdrawMoney
 );
 router.post(

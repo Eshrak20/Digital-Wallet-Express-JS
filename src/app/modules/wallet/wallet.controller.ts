@@ -19,9 +19,9 @@ const getAllWallet = catchAsync(async (req: Request, res: Response) => {
 });
 
 const addMoney = catchAsync(async (req: Request, res: Response) => {
-  const { userId: user_id } = req.user as JwtUserPayload;
-  const { amount } = req.body;
-  const result = await WalletService.addMoney(user_id, amount);
+  const { userId: agent_id } = req.user as JwtUserPayload;
+  const { user_id, amount } = req.body;
+  const result = await WalletService.addMoney(agent_id, user_id, amount);
 
   sendResponse(res, {
     success: true,
@@ -32,8 +32,8 @@ const addMoney = catchAsync(async (req: Request, res: Response) => {
 });
 const withdrawMoney = catchAsync(async (req: Request, res: Response) => {
   const { userId: user_id } = req.user as JwtUserPayload;
-  const { amount } = req.body;
-  const result = await WalletService.withdrawMoney(user_id, amount);
+  const { agent_id,amount } = req.body;
+  const result = await WalletService.withdrawMoney(user_id, agent_id,amount);
 
   sendResponse(res, {
     success: true,

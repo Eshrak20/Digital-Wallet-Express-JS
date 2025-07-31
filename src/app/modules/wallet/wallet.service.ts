@@ -1,4 +1,5 @@
 import AppError from "../../errorHelpers/AppError";
+import { TransferFee, WithdrawCommission } from "../commission/commission.service";
 import {
   TransactionStatus,
   TransactionType,
@@ -18,45 +19,82 @@ const getAllWallet = async () => {
   };
 };
 
-const addMoney = async (user_id: string, amount: number) => {
+const addMoney = async (user_id: string, agent_id: string, amount: number) => {
   if (amount <= 0) throw new AppError(400, "Invalid amount");
 
-  const wallet = await WalletModel.findOne({ user: user_id });
+  const userWallet = await WalletModel.findOne({ user: user_id });
+  const agentWallet = await WalletModel.findOne({ user: agent_id });
 
-  if (!wallet) throw new AppError(404, "Wallet not found");
-  if (wallet.status === "BLOCKED") throw new AppError(403, "Wallet is blocked");
+  if (!userWallet || !agentWallet) throw new AppError(404, "Wallet not found");
+  if (userWallet.status === "BLOCKED" || agentWallet.status === "BLOCKED")
+    throw new AppError(403, "Wallet is blocked");
 
-  wallet.balance += amount;
-  await wallet.save();
+  if (agentWallet.balance < amount) {
+    throw new AppError(422, "Insufficient Balance");
+  }
 
+  agentWallet.balance -= amount;
+  userWallet.balance += amount;
+  await agentWallet.save();
+  await userWallet.save();
   await TransactionService.createTransaction({
     user: user_id,
+    agent: agent_id,
     amount,
     type: TransactionType.ADD,
     status: TransactionStatus.COMPLETED,
   });
 
-  return wallet;
+  return {
+    userWallet,
+    agentWallet,
+  };
 };
-const withdrawMoney = async (user_id: string, amount: number) => {
+const withdrawMoney = async (
+  user_id: string,
+  agent_id: string,
+  amount: number
+) => {
   if (amount <= 0) throw new AppError(400, "Invalid amount");
 
-  const wallet = await WalletModel.findOne({ user: user_id });
+  const userWallet = await WalletModel.findOne({ user: user_id });
+  const agentWallet = await WalletModel.findOne({ user: agent_id });
 
-  if (!wallet) throw new AppError(404, "Wallet not found");
-  if (wallet.status === "BLOCKED") throw new AppError(403, "Wallet is blocked");
+  if (!userWallet || !agentWallet) throw new AppError(404, "Wallet not found");
+  if (userWallet.status === "BLOCKED" || agentWallet.status === "BLOCKED")
+    throw new AppError(403, "Wallet is blocked");
 
-  wallet.balance -= amount;
-  await wallet.save();
+  const { transaction_fee } = await WithdrawCommission(
+    agent_id,
+    amount
+  );
+
+  const totalDeduction = amount + transaction_fee;
+  if (userWallet.balance < totalDeduction) {
+    throw new AppError(422, "Insufficient Balance including transaction fee");
+  }
 
   await TransactionService.createTransaction({
     user: user_id,
+    agent: agent_id,
     amount,
+    transaction_fee: totalDeduction,
     type: TransactionType.WITHDRAW,
     status: TransactionStatus.COMPLETED,
   });
 
-  return wallet;
+  agentWallet.balance += amount;
+  userWallet.balance -= totalDeduction;
+
+  await agentWallet.save();
+  await userWallet.save();
+
+  return {
+    userWallet,
+    agentWallet,
+    withdrawMoney: totalDeduction,
+    transactionFee: transaction_fee,
+  };
 };
 
 const transferMoney = async (
@@ -69,30 +107,39 @@ const transferMoney = async (
   const senderWallet = await WalletModel.findOne({ user: sender_id });
   const receiverWallet = await WalletModel.findOne({ user: receiver_id });
 
-  if (!senderWallet || !receiverWallet)
-    throw new AppError(404, "Wallet not found");
+  if (!senderWallet || !receiverWallet) throw new AppError(404, "Wallet not found");
   if (senderWallet.status === "BLOCKED" || receiverWallet.status === "BLOCKED")
     throw new AppError(403, "Wallet is blocked");
 
-  if (senderWallet.balance < amount) {
-    throw new AppError(422, "Insufficient Balance");
-  }
+  const { transaction_fee } = await TransferFee(
+    amount
+  );
 
-  senderWallet.balance -= amount;
-  receiverWallet.balance += amount;
-  await senderWallet.save();
-  await receiverWallet.save();
+  const totalDeduction = amount + transaction_fee;
+  if (senderWallet.balance < totalDeduction) {
+    throw new AppError(422, "Insufficient Balance including transaction fee");
+  }
 
   await TransactionService.createTransaction({
     user: sender_id,
+    agent: receiver_id,
     amount,
-    type: TransactionType.TRANSFER,
+    transaction_fee: totalDeduction,
+    type: TransactionType.WITHDRAW,
     status: TransactionStatus.COMPLETED,
   });
 
+  receiverWallet.balance += amount;
+  senderWallet.balance -= totalDeduction;
+
+  await receiverWallet.save();
+  await senderWallet.save();
+
   return {
-    receiverWallet,
     senderWallet,
+    receiverWallet,
+    transferMoney: totalDeduction,
+    transactionFee: transaction_fee,
   };
 };
 
@@ -100,13 +147,23 @@ const updateWallet = async (userId: string, payload: Partial<IWallet>) => {
   const wallet = await WalletModel.findOne({ user: userId });
 
   if (!wallet) throw new AppError(404, "Wallet not found");
-  if (wallet.status === "BLOCKED") throw new AppError(403, "Wallet is blocked");
+
+  if (wallet.status === "BLOCKED") {
+    const isOnlyStatusUpdate =
+      Object.keys(payload).length === 1 && "status" in payload;
+    if (!isOnlyStatusUpdate) {
+      throw new AppError(
+        403,
+        "Blocked wallet can only be updated to change status."
+      );
+    }
+  }
 
   const updatedWallet = await WalletModel.findOneAndUpdate(
-    { user: userId }, // filter
-    payload, // update
+    { user: userId },
+    payload,
     {
-      new: true, // return the updated document
+      new: true,
       runValidators: true,
     }
   );

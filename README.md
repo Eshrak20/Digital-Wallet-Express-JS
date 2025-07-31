@@ -52,6 +52,6 @@ https://app.diagrams.net/?splash=0#G1QCTlaziJvm-ju8ES27C4qvEUh6Xemuyz
 1. Approve/suspend agents Goes to update any kind of user by Admin 
 2. Add money Goes to Agent
 3. Withdraw money Goes to User
-
+4. Agent er commission create hoy trasns hoile , ta hole trans id kivabe store korbo agentCommsion tabel e 
 
 

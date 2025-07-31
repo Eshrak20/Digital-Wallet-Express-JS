@@ -11,7 +11,7 @@ router.get(
 );
 router.get(
   "/your-transactions",
-  checkAuth(Role.USER || Role.AGENT),
+  checkAuth(Role.USER ,Role.AGENT),
   transactionControllers.getAllTransactionByUserID,
 
 );
