@@ -6,7 +6,7 @@
 ## 📌 Quick Links
 
 - 🎥 [Overview Video](https://youtu.be/your-video-link)
-- 🌐 [Live Demo](https://wallet-management.vercel.app)
+- 🌐 [Live Demo](https://digital-wallet-express.vercel.app/)
 - 🧠 [ER Diagram (Draw.io)](https://app.diagrams.net/?splash=0#G1QCTlaziJvm-ju8ES27C4qvEUh6Xemuyz)
 - 🗂️ [ER Diagram (Google Drive)](https://drive.google.com/file/d/1QCTlaziJvm-ju8ES27C4qvEUh6Xemuyz/view)
 

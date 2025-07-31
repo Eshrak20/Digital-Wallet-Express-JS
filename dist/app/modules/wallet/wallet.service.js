@@ -17,7 +17,16 @@ const AppError_1 = __importDefault(require("../../errorHelpers/AppError"));
 const commission_service_1 = require("../commission/commission.service");
 const transaction_interface_1 = require("../transaction/transaction.interface");
 const transaction_service_1 = require("../transaction/transaction.service");
+const user_model_1 = require("../user/user.model");
 const wallet_model_1 = require("../wallet/wallet.model");
+const getMylWallet = (user_id) => __awaiter(void 0, void 0, void 0, function* () {
+    const wallet = yield wallet_model_1.WalletModel.find({ user: user_id }).sort({
+        createdAt: -1,
+    });
+    return {
+        data: wallet,
+    };
+});
 const getAllWallet = () => __awaiter(void 0, void 0, void 0, function* () {
     const transactions = yield wallet_model_1.WalletModel.find({});
     const totalTransaction = yield wallet_model_1.WalletModel.countDocuments();
@@ -33,6 +42,9 @@ const addMoney = (user_id, agent_id, amount) => __awaiter(void 0, void 0, void 0
         throw new AppError_1.default(400, "Invalid amount");
     const userWallet = yield wallet_model_1.WalletModel.findOne({ user: user_id });
     const agentWallet = yield wallet_model_1.WalletModel.findOne({ user: agent_id });
+    const userModel = yield user_model_1.UserModel.findById(agent_id);
+    if (!userModel || userModel.role !== "USER")
+        throw new AppError_1.default(404, "This account is not register as USER");
     if (!userWallet || !agentWallet)
         throw new AppError_1.default(404, "Wallet not found");
     if (userWallet.status === "BLOCKED" || agentWallet.status === "BLOCKED")
@@ -61,31 +73,37 @@ const withdrawMoney = (user_id, agent_id, amount) => __awaiter(void 0, void 0, v
         throw new AppError_1.default(400, "Invalid amount");
     const userWallet = yield wallet_model_1.WalletModel.findOne({ user: user_id });
     const agentWallet = yield wallet_model_1.WalletModel.findOne({ user: agent_id });
+    const agentModel = yield user_model_1.UserModel.findById(agent_id);
+    if (!agentModel || agentModel.role !== "AGENT")
+        throw new AppError_1.default(404, "This account is not register as AGENT");
     if (!userWallet || !agentWallet)
         throw new AppError_1.default(404, "Wallet not found");
     if (userWallet.status === "BLOCKED" || agentWallet.status === "BLOCKED")
         throw new AppError_1.default(403, "Wallet is blocked");
-    const { transaction_fee } = yield (0, commission_service_1.WithdrawCommission)(agent_id, amount);
-    const totalDeduction = amount + transaction_fee;
-    if (userWallet.balance < totalDeduction) {
+    const { transaction_fee, agent_commission } = yield (0, commission_service_1.WithdrawCommission)(agent_id, amount);
+    const totalDeductionUser = amount + transaction_fee;
+    const totalDeductionAgent = amount + agent_commission;
+    console.log("agent_commission", agent_commission);
+    console.log("totalDeductionAgent", totalDeductionAgent);
+    if (userWallet.balance < totalDeductionUser) {
         throw new AppError_1.default(422, "Insufficient Balance including transaction fee");
     }
     yield transaction_service_1.TransactionService.createTransaction({
         user: user_id,
         agent: agent_id,
         amount,
-        transaction_fee: totalDeduction,
+        transaction_fee: transaction_fee,
         type: transaction_interface_1.TransactionType.WITHDRAW,
         status: transaction_interface_1.TransactionStatus.COMPLETED,
     });
-    agentWallet.balance += amount;
-    userWallet.balance -= totalDeduction;
+    agentWallet.balance += totalDeductionAgent;
+    userWallet.balance -= totalDeductionUser;
     yield agentWallet.save();
     yield userWallet.save();
     return {
         userWallet,
         agentWallet,
-        withdrawMoney: totalDeduction,
+        withdrawMoney: totalDeductionUser,
         transactionFee: transaction_fee,
     };
 });
@@ -94,6 +112,9 @@ const transferMoney = (sender_id, receiver_id, amount) => __awaiter(void 0, void
         throw new AppError_1.default(400, "Invalid amount");
     const senderWallet = yield wallet_model_1.WalletModel.findOne({ user: sender_id });
     const receiverWallet = yield wallet_model_1.WalletModel.findOne({ user: receiver_id });
+    const userModel = yield user_model_1.UserModel.findById(receiver_id);
+    if (!userModel || userModel.role !== "USER")
+        throw new AppError_1.default(404, "This account is not register as USER");
     if (!senderWallet || !receiverWallet)
         throw new AppError_1.default(404, "Wallet not found");
     if (senderWallet.status === "BLOCKED" || receiverWallet.status === "BLOCKED")
@@ -140,6 +161,7 @@ const updateWallet = (userId, payload) => __awaiter(void 0, void 0, void 0, func
 });
 exports.WalletService = {
     addMoney,
+    getMylWallet,
     getAllWallet,
     withdrawMoney,
     transferMoney,

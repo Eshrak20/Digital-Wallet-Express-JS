@@ -32,7 +32,7 @@ const getAllWallet = async () => {
 };
 
 const addMoney = async (user_id: string, agent_id: string, amount: number) => {
-  if (amount <= 0) throw new AppError(400, "Invalid amount");
+  if (amount <= 100) throw new AppError(400, "Minimum amount 100");
 
   const userWallet = await WalletModel.findOne({ user: user_id });
   const agentWallet = await WalletModel.findOne({ user: agent_id });
@@ -72,7 +72,7 @@ const withdrawMoney = async (
   agent_id: string,
   amount: number
 ) => {
-  if (amount <= 0) throw new AppError(400, "Invalid amount");
+  if (amount <= 100) throw new AppError(400, "Minimum amount 100");
 
   const userWallet = await WalletModel.findOne({ user: user_id });
   const agentWallet = await WalletModel.findOne({ user: agent_id });

@@ -17,6 +17,16 @@ const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const catchAsync_1 = require("../../utils/catchAsync");
 const sendResponse_1 = require("../../utils/sendResponse");
 const wallet_service_1 = require("./wallet.service");
+const getMylWallet = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId: user_id } = req.user;
+    const result = yield wallet_service_1.WalletService.getMylWallet(user_id);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.OK,
+        message: "Your Wallet Retrieved Successfully",
+        data: result,
+    });
+}));
 const getAllWallet = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield wallet_service_1.WalletService.getAllWallet();
     (0, sendResponse_1.sendResponse)(res, {
@@ -44,7 +54,7 @@ const withdrawMoney = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 
     (0, sendResponse_1.sendResponse)(res, {
         success: true,
         statusCode: http_status_codes_1.default.OK,
-        message: "Money added successfully",
+        message: "Money withdraw successfully",
         data: result,
     });
 }));
@@ -73,6 +83,7 @@ const updateWallet = (0, catchAsync_1.catchAsync)((req, res) => __awaiter(void 0
 exports.WalletControllers = {
     addMoney,
     withdrawMoney,
+    getMylWallet,
     getAllWallet,
     transferMoney,
     updateWallet,

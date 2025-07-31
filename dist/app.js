@@ -13,6 +13,7 @@ require("./app/config/passport");
 const globalErrorHandler_1 = require("./app/middlewares/globalErrorHandler");
 const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const routes_1 = require("./app/routes");
+const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 app.use((0, express_session_1.default)({
     secret: env_1.envVars.EXPRESS_SESSION_SECRET,
@@ -26,9 +27,7 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use("/api/w1", routes_1.router);
 app.get("/", (req, res) => {
-    res.status(200).json({
-        message: "Welcome to Digital Wallet System Backend"
-    });
+    res.sendFile(path_1.default.join(__dirname, "../public/welcome.html"));
 });
 app.use(globalErrorHandler_1.globalErrorHandler);
 app.use(notFound_1.default);

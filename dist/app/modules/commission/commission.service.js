@@ -8,13 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommissionService = exports.TransferFee = exports.WithdrawCommission = void 0;
 const capital_model_1 = require("../capital/capital.model");
 const commission_model_1 = require("../commission/commission.model");
 const WithdrawCommission = (agentId, amount) => __awaiter(void 0, void 0, void 0, function* () {
-    const feeUnit = Math.floor(amount / 1000);
-    const transactionFee = amount >= 1000 ? feeUnit * 20 : 10;
+    let feeUnit;
+    let transactionFee;
+    if (amount >= 1000) {
+        feeUnit = Math.floor(amount / 1000);
+        transactionFee = feeUnit * 20;
+    }
+    else {
+        feeUnit = 0.5;
+        transactionFee = feeUnit * 20;
+    }
     const agentCommission = feeUnit * 10;
     const ownerCommission = transactionFee - agentCommission;
     if (agentId && agentCommission > 0) {
@@ -26,7 +37,7 @@ const WithdrawCommission = (agentId, amount) => __awaiter(void 0, void 0, void 0
     if (ownerCommission > 0) {
         yield capital_model_1.CapitalModel.findByIdAndUpdate("capital_wallet", { $inc: { balance: ownerCommission } }, { upsert: true, new: true });
     }
-    return { transaction_fee: transactionFee };
+    return { transaction_fee: transactionFee, agent_commission: agentCommission };
 });
 exports.WithdrawCommission = WithdrawCommission;
 const TransferFee = (amount) => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,17 +48,30 @@ const TransferFee = (amount) => __awaiter(void 0, void 0, void 0, function* () {
     return { transaction_fee: transactionFee };
 });
 exports.TransferFee = TransferFee;
+const mongoose_1 = __importDefault(require("mongoose"));
 const getAllCommissionByUserID = (user_id) => __awaiter(void 0, void 0, void 0, function* () {
-    const transactions = yield commission_model_1.AgentCommissionHistoryModel.find({ agent_id: user_id }).sort({
-        createdAt: -1,
-    });
+    var _a;
+    const agentObjectId = new mongoose_1.default.Types.ObjectId(user_id);
+    const transactions = yield commission_model_1.AgentCommissionHistoryModel.find({
+        agent_id: agentObjectId,
+    }).sort({ createdAt: -1 });
     const totalCommission = yield commission_model_1.AgentCommissionHistoryModel.countDocuments({
-        agent_id: user_id,
+        agent_id: agentObjectId,
     });
+    const totalAmount = yield commission_model_1.AgentCommissionHistoryModel.aggregate([
+        { $match: { agent_id: agentObjectId } },
+        {
+            $group: {
+                _id: null,
+                total: { $sum: "$amount" },
+            },
+        },
+    ]);
     return {
         data: transactions,
         meta: {
             total: totalCommission,
+            totalCommissionAmount: ((_a = totalAmount[0]) === null || _a === void 0 ? void 0 : _a.total) || 0,
         },
     };
 });

@@ -9,6 +9,7 @@ const user_interface_1 = require("../user/user.interface");
 const wallet_validation_1 = require("./wallet.validation");
 const router = (0, express_1.Router)();
 router.get("/all-wallet", (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN), wallet_controller_1.WalletControllers.getAllWallet);
+router.get("/my-wallet", (0, checkAuth_1.checkAuth)(user_interface_1.Role.USER, user_interface_1.Role.AGENT), wallet_controller_1.WalletControllers.getMylWallet);
 router.post("/add", (0, validateRequest_1.validateRequest)(wallet_validation_1.WalletBalanceAddZodSchema), (0, checkAuth_1.checkAuth)(user_interface_1.Role.AGENT), wallet_controller_1.WalletControllers.addMoney);
 router.post("/withdraw", (0, validateRequest_1.validateRequest)(wallet_validation_1.WalletBalanceWithdrawZodSchema), (0, checkAuth_1.checkAuth)(user_interface_1.Role.USER), wallet_controller_1.WalletControllers.withdrawMoney);
 router.post("/transfer-money", (0, validateRequest_1.validateRequest)(wallet_validation_1.WalletTransferZodSchema), (0, checkAuth_1.checkAuth)(user_interface_1.Role.USER), wallet_controller_1.WalletControllers.transferMoney);
