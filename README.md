@@ -1,14 +1,14 @@
 # 💳 Digital Wallet Management System - Backend
+
 > A secure and scalable RESTful API for managing digital wallet operations with role-based access control.
 
 ---
 
 ## 📌 Quick Links
 
-- 🎥 [Overview Video](https://youtu.be/your-video-link)
-- 🌐 [Live Demo](https://digital-wallet-express.vercel.app/)
-- 🧠 [ER Diagram (Draw.io)](https://app.diagrams.net/?splash=0#G1QCTlaziJvm-ju8ES27C4qvEUh6Xemuyz)
-- 🗂️ [ER Diagram (Google Drive)](https://drive.google.com/file/d/1QCTlaziJvm-ju8ES27C4qvEUh6Xemuyz/view)
+- 🎥 [Overview Video](https://youtu.be/SxR3mZe1f4w)
+- 🌐 [Live Demo](https://digital-wallet-express.vercel.app)
+- 🧠 [ER Diagram](https://drive.google.com/file/d/1QCTlaziJvm-ju8ES27C4qvEUh6Xemuyz/view)
 
 ---
 
@@ -20,28 +20,23 @@
 - **✅ Validation:** **Zod**
 - **🧹 Code Quality:** **ESLint**, **Prettier**
 
-
-
 ## Clone the repository
+
 git clone https://github.com/your-username/backend-digital-wallet.git
 cd backend-digital-wallet
 
 ## Install dependencies
+
 npm install
 
 ## Run in development
+
 npm run dev
-
-
-
-
 
 ## 🔀 API Endpoints
 
-
-
-
 ### 👤 User Routes
+
 | Method | Endpoint           | Access | Description         |
 | ------ | ------------------ | ------ | ------------------- |
 | POST   | `/user/register`   | Public | Register new user   |
@@ -49,9 +44,8 @@ npm run dev
 | GET    | `/user/all-users`  | Admin  | Get all users       |
 | GET    | `/user/all-agents` | Admin  | Get all agents      |
 
-
-
 ### 💼 Wallet Routes
+
 | Method | Endpoint                 | Access     | Description                |
 | ------ | ------------------------ | ---------- | -------------------------- |
 | POST   | `/wallet/add`            | Agent      | Add money to user wallet   |
@@ -61,33 +55,22 @@ npm run dev
 | GET    | `/wallet/my-wallet`      | User/Agent | View own wallet            |
 | PATCH  | `/wallet/:id`            | Admin      | Update wallet info         |
 
-
-
-
 ### 💳 Transaction Routes
+
 | Method | Endpoint                   | Access     | Description             |
 | ------ | -------------------------- | ---------- | ----------------------- |
 | GET    | `/trans/all-transactions`  | Admin      | All system transactions |
 | GET    | `/trans/your-transactions` | User/Agent | Your own transactions   |
 
-
-
 ### 💰 Commission Routes
+
 | Method | Endpoint             | Access | Description            |
 | ------ | -------------------- | ------ | ---------------------- |
 | GET    | `/com/all-agent-com` | Admin  | All commissions data   |
 | GET    | `/com/agent-com`     | Agent  | My commission earnings |
 
-
-
-
-
-
-
-
-
-
 ## 📁 Project Structure
+
 | Folder/File               | Path                           | Description                |
 | ------------------------- | ------------------------------ | -------------------------- |
 | `app/modules/user`        | `src/app/modules/user/`        | User controllers, services |
@@ -99,11 +82,6 @@ npm run dev
 | `config`                  | `src/config/`                  | Configuration files        |
 | `utils`                   | `src/utils/`                   | Utility functions          |
 | `server.ts`               | `src/server.ts`                | Server entry point         |
-
-
-
-
-
 
 <!-- src/
 ├── app/
@@ -117,5 +95,3 @@ npm run dev
 ├── config/                # Configuration files
 ├── utils/                 # Utility functions
 └── server.ts              # Server entry point -->
-
-

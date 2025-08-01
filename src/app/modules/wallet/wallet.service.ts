@@ -31,13 +31,11 @@ const getAllWallet = async () => {
   };
 };
 
-const addMoney = async (user_id: string, agent_id: string, amount: number) => {
-  if (amount <= 100) throw new AppError(400, "Minimum amount 100");
-
+const addMoney = async (agent_id: string, user_id: string, amount: number) => {
+  if (amount < 100) throw new AppError(400, "Minimum amount 100");
   const userWallet = await WalletModel.findOne({ user: user_id });
   const agentWallet = await WalletModel.findOne({ user: agent_id });
-
-  const userModel = await UserModel.findById(agent_id);
+  const userModel = await UserModel.findById(user_id);
 
   if (!userModel || userModel.role !== "USER")
     throw new AppError(404, "This account is not register as USER");
@@ -72,7 +70,7 @@ const withdrawMoney = async (
   agent_id: string,
   amount: number
 ) => {
-  if (amount <= 100) throw new AppError(400, "Minimum amount 100");
+  if (amount < 100) throw new AppError(400, "Minimum amount 100");
 
   const userWallet = await WalletModel.findOne({ user: user_id });
   const agentWallet = await WalletModel.findOne({ user: agent_id });
@@ -92,8 +90,8 @@ const withdrawMoney = async (
 
   const totalDeductionUser = amount + transaction_fee;
   const totalDeductionAgent = amount + agent_commission;
-  console.log("agent_commission",agent_commission)
-  console.log("totalDeductionAgent",totalDeductionAgent)
+  console.log("agent_commission", agent_commission);
+  console.log("totalDeductionAgent", totalDeductionAgent);
   if (userWallet.balance < totalDeductionUser) {
     throw new AppError(422, "Insufficient Balance including transaction fee");
   }
