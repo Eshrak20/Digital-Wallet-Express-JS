@@ -60,7 +60,7 @@ npm run dev
 | Method | Endpoint                   | Access     | Description             |
 | ------ | -------------------------- | ---------- | ----------------------- |
 | GET    | `/trans/all-transactions`  | Admin      | All system transactions |
-| GET    | `/trans/your-transactions` | User/Agent | Your own transactions   |
+| GET    | `/trans/your-transactions` | User       | Your own transactions   |
 
 ### 💰 Commission Routes
 

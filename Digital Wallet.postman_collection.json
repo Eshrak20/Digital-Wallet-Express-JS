@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\":\"Eshrak\",\n    \"email\":\"eshrakg1@gmail.com\",\n    \"password\":\"Z6!dY3m&\",\n    \"address\":\"Z6!dY3m&\",\n    \"phone\":\"01925062871\"\n\n\n}",
+							"raw": "{\n    \"name\":\"Eshrak\",\n    \"email\":\"user2@example.com\",\n    \"password\":\"@User1234\",\n    \"address\":\"Dhaka\",\n    \"phone\":\"01925062876\"\n\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -52,14 +52,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/w1/user/688b26ed86af70e21a2c2c1c",
+							"raw": "{{url}}api/w1/user/688c85d52d1304b3b3d4ce40",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"w1",
 								"user",
-								"688b26ed86af70e21a2c2c1c"
+								"688c85d52d1304b3b3d4ce40"
 							]
 						}
 					},
@@ -128,14 +128,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/w1/user/all-users",
+							"raw": "{{url}}api/w1/user/all-agents",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"w1",
 								"user",
-								"all-users"
+								"all-agents"
 							]
 						}
 					},
@@ -162,6 +162,16 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"request": {
@@ -169,7 +179,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\n    \"email\": \"admin@example.com\",\n    \"password\": \"123456\"\n\n    // \"email\":\"user1@gmail.com\",\n    // \"password\":\"Z6!dY3m&\"\n\n    // \"email\": \"agent1@gmail.com\",\n    // \"password\": \"Z6!dY3m&\"\n\n\n\n   \n}\n",
+							"raw": "{\n\n    \"email\": \"admin@example.com\",\n    \"password\": \"123456\"\n\n    // \"email\":\"agent@example.com\",\n    // \"password\":\"@Agent1234\"\n\n    // \"email\": \"user1@example.com\",\n    // \"password\": \"@User1234\"\n\n\n\n   \n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -202,7 +212,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_id\":\"688a56e27babdbf5b949af71\",\n    \"amount\": 20000\n}",
+							"raw": "{\n    \"user_id\":\"688c8673ee91311f4111f05c\",\n    \"amount\": 100\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -230,7 +240,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"agent_id\":\"688b10ef791fcf402b90b9d8\",\n    \"amount\": 100\n}",
+							"raw": "{\n    \"agent_id\":\"688c85d52d1304b3b3d4ce40\",\n    \"amount\": 100\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -258,7 +268,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"receiver_id\":\"688a57127babdbf5b949af77\",\n    \"amount\": 10\n}",
+							"raw": "{\n    \"receiver_id\":\"688c8699ee91311f4111f061\",\n    \"amount\": 50\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -315,7 +325,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"amount\": 5\n}"
+							"raw": ""
 						},
 						"url": {
 							"raw": "{{url}}api/w1/wallet/my-wallet",
@@ -338,7 +348,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"status\":\"ACTIVE\"\n    // \"balance\": 5000\n}",
+							"raw": "{\n    \"status\":\"ACTIVE\",\n    \"balance\": 5000\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -346,14 +356,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}api/w1/wallet/688a56e27babdbf5b949af71",
+							"raw": "{{url}}api/w1/wallet/688c85d52d1304b3b3d4ce40",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"w1",
 								"wallet",
-								"688a56e27babdbf5b949af71"
+								"688c85d52d1304b3b3d4ce40"
 							]
 						}
 					},
@@ -384,19 +394,19 @@
 					"response": []
 				},
 				{
-					"name": "Get Your Transaction-history",
+					"name": "Get User Transaction-history",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}api/w1/trans/all-transaction",
+							"raw": "{{url}}api/w1/trans/your-transactions",
 							"host": [
 								"{{url}}api"
 							],
 							"path": [
 								"w1",
 								"trans",
-								"all-transaction"
+								"your-transactions"
 							]
 						}
 					},
@@ -411,7 +421,18 @@
 					"name": "Agent All Commission History",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{url}}api/w1/com/all-agent-com",
+							"host": [
+								"{{url}}api"
+							],
+							"path": [
+								"w1",
+								"com",
+								"all-agent-com"
+							]
+						}
 					},
 					"response": []
 				},

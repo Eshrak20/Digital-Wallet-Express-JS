@@ -125,7 +125,9 @@ const transferMoney = async (
   amount: number
 ) => {
   if (amount <= 0) throw new AppError(400, "Invalid amount");
-
+  if (sender_id === receiver_id) {
+    throw new AppError(404, "You can't send money to your own account");
+  }
   const senderWallet = await WalletModel.findOne({ user: sender_id });
   const receiverWallet = await WalletModel.findOne({ user: receiver_id });
 
