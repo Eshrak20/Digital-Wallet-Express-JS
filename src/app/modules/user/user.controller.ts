@@ -62,10 +62,25 @@ const getAllAgents = catchAsync(
     });
   }
 );
+const myProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const verifiedToken = req.user;
+    const id = verifiedToken?.userId //!Pending
+    const result = await UserServices.myProfile(id); 
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Profile Retrieved Successfully",
+      data: result,
+    });
+  }
+);
+
 
 export const UserControllers = {
   createUser,
   updateUser,
   getAllUsers,
   getAllAgents,
+  myProfile,
 };

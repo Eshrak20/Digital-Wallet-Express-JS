@@ -14,11 +14,12 @@ interface EnvConfig {
     ADMIN_EMAIL: string
     ADMIN_PASSWORD: string
     EXPRESS_SESSION_SECRET: string
+    FRONT_END_URL: string
 
 }
 
 const loadEnvVariables = (): EnvConfig => {
-    const requiredEnvVariables: string[] = ["PORT", "DB_URL", "NODE_ENV", "BCRYPT_SALT_ROUND", "JWT_ACCESS_EXPIRES", "JWT_ACCESS_SECRET", "ADMIN_EMAIL", "ADMIN_PASSWORD", "JWT_REFRESH_SECRET", "JWT_REFRESH_EXPIRES", "EXPRESS_SESSION_SECRET"];
+    const requiredEnvVariables: string[] = ["PORT", "DB_URL", "NODE_ENV", "BCRYPT_SALT_ROUND", "JWT_ACCESS_EXPIRES", "JWT_ACCESS_SECRET", "ADMIN_EMAIL", "ADMIN_PASSWORD", "JWT_REFRESH_SECRET", "JWT_REFRESH_EXPIRES", "EXPRESS_SESSION_SECRET","FRONT_END_URL"];
 
     requiredEnvVariables.forEach(key => {
         if (!process.env[key]) {
@@ -39,6 +40,7 @@ const loadEnvVariables = (): EnvConfig => {
         ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
         ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
         EXPRESS_SESSION_SECRET: process.env.EXPRESS_SESSION_SECRET as string,
+        FRONT_END_URL: process.env.FRONT_END_URL as string,
 
     }
 }

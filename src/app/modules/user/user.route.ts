@@ -11,9 +11,13 @@ router.post(
   validateRequest(createUserZodSchema),
   UserControllers.createUser
 );
-router.get("/all-users", checkAuth(Role.ADMIN), UserControllers.getAllUsers)
-router.get("/all-agents", checkAuth(Role.ADMIN), UserControllers.getAllAgents)
-router.patch("/:id", checkAuth(Role.ADMIN), UserControllers.updateUser)
-
+router.get(
+  "/my-profile",
+  checkAuth(...Object.values(Role)),
+  UserControllers.myProfile
+);
+router.get("/all-users", checkAuth(Role.ADMIN), UserControllers.getAllUsers);
+router.get("/all-agents", checkAuth(Role.ADMIN), UserControllers.getAllAgents);
+router.patch("/:id", checkAuth(Role.ADMIN), UserControllers.updateUser);
 
 export const UserRoutes = router;

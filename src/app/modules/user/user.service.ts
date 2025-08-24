@@ -94,6 +94,26 @@ const updateUser = async (
   return newUpdatedUser;
 };
 
+const myProfile = async (id: string) => {
+  const user = await UserModel.findById(id).select("-password");
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Customize response by role
+  switch (user.role) {
+    case "AGENT":
+      return { role: "AGENT", data: user };
+    case "USER":
+      return { role: "USER", data: user };
+    case "ADMIN":
+      return { role: "ADMIN", data: user };
+    default:
+      return { data: user };
+  }
+};
+
 const getAllUsers = async () => {
   const users = await UserModel.find({ role: "USER" });
   const totalUsers = await UserModel.countDocuments({ role: "USER" });
@@ -114,10 +134,12 @@ const getAllAgents = async () => {
     },
   };
 };
+// My Profile Function
 
 export const UserServices = {
   createUser,
   updateUser,
   getAllUsers,
   getAllAgents,
+  myProfile,
 };
