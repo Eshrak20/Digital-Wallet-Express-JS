@@ -3,7 +3,12 @@ import { validateRequest } from "../../middlewares/validateRequest";
 import { WalletControllers } from "./wallet.controller";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
-import { WalletBalanceAddZodSchema, WalletBalanceWithdrawZodSchema, WalletTransferZodSchema } from "./wallet.validation";
+import {
+  WalletAddMoneyZodSchema,
+  WalletBalanceAddZodSchema,
+  WalletBalanceWithdrawZodSchema,
+  WalletTransferZodSchema,
+} from "./wallet.validation";
 
 const router = Router();
 
@@ -14,7 +19,7 @@ router.get(
 );
 router.get(
   "/my-wallet",
-  checkAuth(Role.USER,Role.AGENT),
+  checkAuth(Role.USER, Role.AGENT),
   WalletControllers.getMylWallet
 );
 router.post(
@@ -35,6 +40,11 @@ router.post(
   checkAuth(Role.USER),
   WalletControllers.transferMoney
 );
-router.patch("/:id", checkAuth(Role.ADMIN), WalletControllers.updateWallet)
+router.patch(
+  "/:id",
+  validateRequest(WalletAddMoneyZodSchema),
+  checkAuth(Role.ADMIN),
+  WalletControllers.updateWallet
+);
 
 export const WalletRoutes = router;

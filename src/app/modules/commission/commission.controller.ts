@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import httpStatus from "http-status-codes";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
@@ -9,7 +9,7 @@ import { CommissionService } from "./commission.service";
 const getAllCommissionByUserID = catchAsync(
   async (req: Request, res: Response) => {
     const { userId: user_id } = req.user as JwtUserPayload;
-    const result = await CommissionService.getAllCommissionByUserID(user_id);
+    const result = await CommissionService.getAllCommissionByUserID(user_id,req.query);
 
     sendResponse(res, {
       success: true,
@@ -20,7 +20,7 @@ const getAllCommissionByUserID = catchAsync(
   }
 );
 const getAllCommission = catchAsync(async (req: Request, res: Response) => {
-  const result = await CommissionService.getAllCommission();
+  const result = await CommissionService.getAllCommission(req.query);
 
   sendResponse(res, {
     success: true,

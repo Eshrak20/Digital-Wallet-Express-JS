@@ -19,7 +19,7 @@ const getMylWallet = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getAllWallet = catchAsync(async (req: Request, res: Response) => {
-  const result = await WalletService.getAllWallet();
+  const result = await WalletService.getAllWallet(req.query);
 
   sendResponse(res, {
     success: true,

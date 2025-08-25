@@ -30,4 +30,5 @@ export interface IUser {
   is_active: IsActive;
   is_verified: boolean;
   role: Role;
+  // userId?: string;
 }

@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from "../../errorHelpers/AppError";
+import { QueryBuilder } from "../../utils/QueryBuilder";
 import {
   TransferFee,
   WithdrawCommission,
@@ -20,17 +22,24 @@ const getMylWallet = async (user_id: string) => {
     data: wallet,
   };
 };
-const getAllWallet = async () => {
-  const transactions = await WalletModel.find({});
-  const totalTransaction = await WalletModel.countDocuments();
+const getAllWallet = async (query: Record<string, any>) => {
+  const baseQuery = WalletModel.find({});
+  const queryBuilder = new QueryBuilder(baseQuery, query);
+  const walletQuery = queryBuilder
+    .search(["type", "status"])
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+  const [data, meta] = await Promise.all([
+    walletQuery.build(),
+    queryBuilder.getMeta(),
+  ]);
   return {
-    data: transactions,
-    meta: {
-      total: totalTransaction,
-    },
+    data,
+    meta,
   };
 };
-
 const addMoney = async (agent_id: string, user_id: string, amount: number) => {
   if (amount < 100) throw new AppError(400, "Minimum amount 100");
   const userWallet = await WalletModel.findOne({ user: user_id });
@@ -90,8 +99,6 @@ const withdrawMoney = async (
 
   const totalDeductionUser = amount + transaction_fee;
   const totalDeductionAgent = amount + agent_commission;
-  console.log("agent_commission", agent_commission);
-  console.log("totalDeductionAgent", totalDeductionAgent);
   if (userWallet.balance < totalDeductionUser) {
     throw new AppError(422, "Insufficient Balance including transaction fee");
   }

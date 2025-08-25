@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { UserControllers } from "./user.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { createUserZodSchema } from "./user.validation";
+import { createUserZodSchema, updateUserRoleAndStatusZodSchema, updateUserZodSchema } from "./user.validation";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "./user.interface";
 
@@ -16,8 +16,9 @@ router.get(
   checkAuth(...Object.values(Role)),
   UserControllers.myProfile
 );
-router.get("/all-users", checkAuth(Role.ADMIN), UserControllers.getAllUsers);
+router.get("/all-users", checkAuth(Role.ADMIN,Role.USER), UserControllers.getAllUsers);
 router.get("/all-agents", checkAuth(Role.ADMIN), UserControllers.getAllAgents);
-router.patch("/:id", checkAuth(Role.ADMIN), UserControllers.updateUser);
+router.patch("/profile", validateRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserControllers.updateProfile);
+router.patch("/:id", validateRequest(updateUserRoleAndStatusZodSchema), checkAuth(Role.ADMIN), UserControllers.updateUserRoleAndStatus);
 
 export const UserRoutes = router;

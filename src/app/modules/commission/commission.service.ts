@@ -1,5 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { QueryBuilder } from "../../utils/QueryBuilder";
 import { CapitalModel } from "../capital/capital.model";
 import { AgentCommissionHistoryModel } from "../commission/commission.model";
+import mongoose from "mongoose";
+
 export const WithdrawCommission = async (agentId: string, amount: number) => {
   let feeUnit: number;
   let transactionFee: number;
@@ -46,48 +50,59 @@ export const TransferFee = async (amount: number) => {
   return { transaction_fee: transactionFee };
 };
 
-import mongoose from "mongoose";
-
-const getAllCommissionByUserID = async (user_id: string) => {
+const getAllCommissionByUserID = async (
+  user_id: string,
+  query: Record<string, any>
+) => {
   const agentObjectId = new mongoose.Types.ObjectId(user_id);
 
-  const transactions = await AgentCommissionHistoryModel.find({
-    agent_id: agentObjectId,
-  }).sort({ createdAt: -1 });
-
-  const totalCommission = await AgentCommissionHistoryModel.countDocuments({
+  // ✅ Always inject agent_id into the base filter
+  const baseQuery = AgentCommissionHistoryModel.find({
     agent_id: agentObjectId,
   });
 
-  const totalAmount = await AgentCommissionHistoryModel.aggregate([
-    { $match: { agent_id: agentObjectId } },
-    {
-      $group: {
-        _id: null,
-        total: { $sum: "$amount" },
-      },
-    },
+  const queryBuilder = new QueryBuilder(baseQuery, query);
+  const commissionQuery = queryBuilder
+    .search(["type", "status"])
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta, totalAmount] = await Promise.all([
+    commissionQuery.build(),
+    queryBuilder.getMeta(),
+    AgentCommissionHistoryModel.aggregate([
+      { $match: { agent_id: agentObjectId } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]),
   ]);
 
   return {
-    data: transactions,
+    data,
     meta: {
-      total: totalCommission,
+      ...meta,
       totalCommissionAmount: totalAmount[0]?.total || 0,
     },
   };
 };
 
-const getAllCommission = async () => {
-  const transactions = await AgentCommissionHistoryModel.find({}).sort({
-    createdAt: -1,
-  });
-  const totalTransaction = await AgentCommissionHistoryModel.countDocuments();
+const getAllCommission = async (query: Record<string, any>) => {
+  const baseQuery = AgentCommissionHistoryModel.find({});
+  const queryBuilder = new QueryBuilder(baseQuery, query);
+  const commissionQuery = queryBuilder
+    .search(["type", "status"])
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+  const [data, meta] = await Promise.all([
+    commissionQuery.build(),
+    queryBuilder.getMeta(),
+  ]);
   return {
-    data: transactions,
-    meta: {
-      total: totalTransaction,
-    },
+    data,
+    meta,
   };
 };
 export const CommissionService = {

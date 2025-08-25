@@ -13,3 +13,7 @@ export const WalletTransferZodSchema = z.object({
   amount: z.number().nonnegative().default(0),
 });
 
+export const WalletAddMoneyZodSchema = z.object({
+  balance: z.number().nonnegative().default(0).optional(),
+  status: z.enum(["BLOCKED", "ACTIVE"]).optional(),
+});

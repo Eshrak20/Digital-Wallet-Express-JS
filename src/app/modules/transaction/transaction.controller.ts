@@ -9,7 +9,12 @@ import { JwtUserPayload } from "../../interfaces/JwtUserPayload.types";
 const getAllTransactionByUserID = catchAsync(
   async (req: Request, res: Response) => {
     const { userId: user_id } = req.user as JwtUserPayload;
-    const result = await TransactionService.getAllTransactionByUserID(user_id);
+
+    // Pass query from request
+    const result = await TransactionService.getAllTransactionByUserID(
+      user_id,
+      req.query
+    );
 
     sendResponse(res, {
       success: true,
@@ -19,8 +24,9 @@ const getAllTransactionByUserID = catchAsync(
     });
   }
 );
+
 const getAllTransaction = catchAsync(async (req: Request, res: Response) => {
-  const result = await TransactionService.getAllTransaction();
+  const result = await TransactionService.getAllTransaction(req.query);
 
   sendResponse(res, {
     success: true,
@@ -32,5 +38,5 @@ const getAllTransaction = catchAsync(async (req: Request, res: Response) => {
 
 export const transactionControllers = {
   getAllTransaction,
-  getAllTransactionByUserID
+  getAllTransactionByUserID,
 };

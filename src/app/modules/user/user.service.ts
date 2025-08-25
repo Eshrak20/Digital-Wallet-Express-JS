@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import bcryptjs from "bcryptjs";
 import httpStatus from "http-status-codes";
 import { IAuthProvider, IUser, Role } from "./user.interface";
 import AppError from "../../errorHelpers/AppError";
 import { UserModel } from "./user.model";
-import { WalletModel } from "../wallet/wallet.model";
 import { envVars } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { WalletModel } from "../wallet/wallet.model";
 
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, role = "USER", ...rest } = payload;
@@ -69,7 +71,7 @@ const updateUser = async (
     }
 
     if (payload.role === Role.ADMIN && decodedToken.role === Role.ADMIN) {
-      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+      throw new AppError(httpStatus.FORBIDDEN, "You are Already an Admin");
     }
   }
 
@@ -80,10 +82,8 @@ const updateUser = async (
   }
 
   if (payload.password) {
-    payload.password = await bcryptjs.hash(
-      payload.password,
-      envVars.BCRYPT_SALT_ROUND
-    );
+    const salt = await bcryptjs.genSalt(Number(envVars.BCRYPT_SALT_ROUND));
+    payload.password = await bcryptjs.hash(payload.password, salt);
   }
 
   const newUpdatedUser = await UserModel.findByIdAndUpdate(userId, payload, {
@@ -100,39 +100,45 @@ const myProfile = async (id: string) => {
   if (!user) {
     throw new Error("User not found");
   }
-
-  // Customize response by role
-  switch (user.role) {
-    case "AGENT":
-      return { role: "AGENT", data: user };
-    case "USER":
-      return { role: "USER", data: user };
-    case "ADMIN":
-      return { role: "ADMIN", data: user };
-    default:
-      return { data: user };
-  }
+  return { data: user };
 };
 
-const getAllUsers = async () => {
-  const users = await UserModel.find({ role: "USER" });
-  const totalUsers = await UserModel.countDocuments({ role: "USER" });
-  return {
-    data: users,
-    meta: {
-      total: totalUsers,
-    },
-  };
+const getAllUsers = async (query: Record<string, any>) => {
+  const baseQuery = UserModel.find({ role: "USER" });
+  const queryBuilder = new QueryBuilder(baseQuery, query);
+
+  const userQuery = queryBuilder
+    .search(["phone", "email", "_id", "address", "is_active", "is_verified"])
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    userQuery.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return { data, meta };
 };
-const getAllAgents = async () => {
-  const users = await UserModel.find({ role: "AGENT" });
-  const totalUsers = await UserModel.countDocuments({ role: "AGENT" });
-  return {
-    data: users,
-    meta: {
-      total: totalUsers,
-    },
-  };
+
+const getAllAgents = async (query: Record<string, any>) => {
+  const baseQuery = UserModel.find({ role: "AGENT" });
+  const queryBuilder = new QueryBuilder(baseQuery, query);
+
+  const userQuery = queryBuilder
+    .search(["phone", "email", "_id", "address", "is_active", "is_verified"])
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    userQuery.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return { data, meta };
 };
 // My Profile Function
 
