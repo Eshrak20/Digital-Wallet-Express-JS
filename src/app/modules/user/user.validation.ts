@@ -15,16 +15,16 @@ export const createUserZodSchema = z.object({
 
   password: z
     .string({ invalid_type_error: "Password must be string" })
-    .min(4, { message: "Password must be at least 4 characters long." }),
-  // .regex(/^(?=.*[A-Z])/, {
-  //   message: "Password must contain at least 1 uppercase letter.",
-  // })
-  // .regex(/^(?=.*[!@#$%^&*])/, {
-  //   message: "Password must contain at least 1 special character.",
-  // })
-  // .regex(/^(?=.*\d)/, {
-  //   message: "Password must contain at least 1 number.",
-  // }),
+    .min(4, { message: "Password must be at least 4 characters long." })
+    .regex(/^(?=.*[A-Z])/, {
+      message: "Password must contain at least 1 uppercase letter.",
+    })
+    .regex(/^(?=.*[!@#$%^&*])/, {
+      message: "Password must contain at least 1 special character.",
+    })
+    .regex(/^(?=.*\d)/, {
+      message: "Password must contain at least 1 number.",
+    }),
 
   phone: z
     .string({ invalid_type_error: "Phone Number must be string" })
@@ -49,6 +49,15 @@ export const updateUserZodSchema = z.object({
   password: z
     .string({ invalid_type_error: "Password must be string" })
     .min(4, { message: "Password must be at least 4 characters long." })
+    .regex(/^(?=.*[A-Z])/, {
+      message: "Password must contain at least 1 uppercase letter.",
+    })
+    .regex(/^(?=.*[!@#$%^&*])/, {
+      message: "Password must contain at least 1 special character.",
+    })
+    .regex(/^(?=.*\d)/, {
+      message: "Password must contain at least 1 number.",
+    })
     .optional(),
   phone: z
     .string({ invalid_type_error: "Phone Number must be string" })

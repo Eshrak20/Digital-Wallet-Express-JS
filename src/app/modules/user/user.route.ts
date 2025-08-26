@@ -18,7 +18,7 @@ router.get(
 );
 router.get("/all-users", checkAuth(Role.ADMIN,Role.USER), UserControllers.getAllUsers);
 router.get("/all-agents", checkAuth(Role.ADMIN), UserControllers.getAllAgents);
-router.patch("/profile", validateRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserControllers.updateProfile);
+router.patch("/update-profile", validateRequest(updateUserZodSchema), checkAuth(...Object.values(Role)), UserControllers.updateProfile);
 router.patch("/:id", validateRequest(updateUserRoleAndStatusZodSchema), checkAuth(Role.ADMIN), UserControllers.updateUserRoleAndStatus);
 
 export const UserRoutes = router;

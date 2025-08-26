@@ -18,7 +18,7 @@ const getAllTransactionByUserID = async (
   const queryBuilder = new QueryBuilder(baseQuery, query);
 
   const transactionsQuery = queryBuilder
-    .search(["type", "status"]) // example: searchable fields
+    .search(["type", "createdAt"]) // example: searchable fields
     .filter()
     .sort()
     .fields()

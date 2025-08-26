@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-dynamic-delete */
 import { Query } from "mongoose";
 import { excludeField } from "../constants";
@@ -12,15 +13,30 @@ export class QueryBuilder<T> {
   }
 
   filter(): this {
-    const filter = { ...this.query };
+    const filter: Record<string, any> = { ...this.query };
 
     for (const field of excludeField) {
       delete filter[field];
     }
-    this.modelQuery = this.modelQuery.find({
-      ...filter,
-      ...this.modelQuery.getQuery(),
-    });
+
+    const finalFilter: Record<string, any> = { ...this.modelQuery.getQuery() };
+
+    if (filter.type) finalFilter.type = filter.type;
+
+    if (filter.startDate || filter.endDate) {
+      finalFilter.createdAt = {};
+      if (filter.startDate) {
+        finalFilter.createdAt.$gte = new Date(filter.startDate);
+      }
+      if (filter.endDate) {
+        const end = new Date(filter.endDate);
+        end.setHours(23, 59, 59, 999);
+        finalFilter.createdAt.$lte = end;
+      }
+    }
+
+    this.modelQuery = this.modelQuery.find(finalFilter);
+
     return this;
   }
 
