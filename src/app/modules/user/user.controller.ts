@@ -57,19 +57,12 @@ const updateProfile = catchAsync(
     });
   }
 );
-
-
-
-
-
-
-
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await UserServices.getAllUsers(req.query);
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.CREATED,
+      statusCode: httpStatus.OK,
       message: "All Users Retrieved Successfully",
       data: result.data,
       meta: result.meta,

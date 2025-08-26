@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from "../../errorHelpers/AppError";
 import { QueryBuilder } from "../../utils/QueryBuilder";
+import { CapitalModel } from "../capital/capital.model";
 import {
   TransferFee,
   WithdrawCommission,
@@ -18,6 +19,12 @@ const getMylWallet = async (user_id: string) => {
   const wallet = await WalletModel.find({ user: user_id }).sort({
     createdAt: -1,
   });
+  return {
+    data: wallet,
+  };
+};
+const getCapitalWallet = async () => {
+  const wallet = await CapitalModel.find({});
   return {
     data: wallet,
   };
@@ -209,6 +216,7 @@ const updateWallet = async (userId: string, payload: Partial<IWallet>) => {
 export const WalletService = {
   addMoney,
   getMylWallet,
+  getCapitalWallet,
   getAllWallet,
   withdrawMoney,
   transferMoney,

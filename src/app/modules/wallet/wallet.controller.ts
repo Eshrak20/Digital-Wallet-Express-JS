@@ -18,6 +18,16 @@ const getMylWallet = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getCapitalWallet = catchAsync(async (req: Request, res: Response) => {
+  const result = await WalletService.getCapitalWallet();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Capital Wallet Retrieved Successfully",
+    data: result,
+  });
+});
 const getAllWallet = catchAsync(async (req: Request, res: Response) => {
   const result = await WalletService.getAllWallet(req.query);
 
@@ -88,6 +98,7 @@ export const WalletControllers = {
   addMoney,
   withdrawMoney,
   getMylWallet,
+  getCapitalWallet,
   getAllWallet,
   transferMoney,
   updateWallet,

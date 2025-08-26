@@ -39,22 +39,24 @@ export class QueryBuilder<T> {
 
     return this;
   }
+search(searchableField: string[]): this {
+  const searchTerm = this.query?.searchTerm || this.query?.email || this.query?.phone || "";
+  if (!searchTerm) return this;
 
-  search(searchableField: string[]): this {
-    const searchTerm = this.query?.searchTerm || "";
-    if (searchTerm) {
-      const searchQuery = {
-        $or: searchableField.map((field) => ({
-          [field]: { $regex: searchTerm, $options: "i" },
-        })),
-      };
-      this.modelQuery = this.modelQuery.find({
-        ...this.modelQuery.getQuery(),
-        ...searchQuery,
-      });
-    }
-    return this;
-  }
+  const searchQuery: any = {
+    $or: searchableField.map(field => ({
+      [field]: { $regex: searchTerm, $options: "i" },
+    })),
+  };
+
+  this.modelQuery = this.modelQuery.find({ ...this.modelQuery.getQuery(), ...searchQuery });
+  return this;
+}
+
+
+
+
+
 
   sort(): this {
     const sort = this.query?.sort || "-createdAt";

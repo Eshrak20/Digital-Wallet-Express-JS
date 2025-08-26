@@ -108,7 +108,7 @@ const getAllUsers = async (query: Record<string, any>) => {
   const queryBuilder = new QueryBuilder(baseQuery, query);
 
   const userQuery = queryBuilder
-    .search(["phone", "email", "_id", "address", "is_active", "is_verified"])
+    .search(["phone", "email", "address"]) // only string fields
     .filter()
     .sort()
     .fields()
@@ -121,6 +121,7 @@ const getAllUsers = async (query: Record<string, any>) => {
 
   return { data, meta };
 };
+
 
 const getAllAgents = async (query: Record<string, any>) => {
   const baseQuery = UserModel.find({ role: "AGENT" });

@@ -22,6 +22,11 @@ router.get(
   checkAuth(Role.USER, Role.AGENT),
   WalletControllers.getMylWallet
 );
+router.get(
+  "/capital-wallet",
+  checkAuth(Role.ADMIN),
+  WalletControllers.getCapitalWallet
+);
 router.post(
   "/add",
   validateRequest(WalletBalanceAddZodSchema),
